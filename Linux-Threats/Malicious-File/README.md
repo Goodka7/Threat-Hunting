@@ -1,7 +1,7 @@
 <img width="400" src="https://github.com/user-attachments/assets/cf2bfe69-30da-4a79-aaa4-6d2f0509ecf8"/>
 
 # Threat Hunt Report: Malicious File Execution
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-Malicious-Execution-/blob/main/resources/Threat-Hunt-Event(Malicious%20Execution).md)
+- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-Malicious-Execution-/blob/main/resources/Threat-Hunt-Event(Malicious%20Execution).md).
 
 ## Platforms and Languages Leveraged
 - Linux (Ubuntu 22.04) Virtual Machines (Microsoft Azure)
