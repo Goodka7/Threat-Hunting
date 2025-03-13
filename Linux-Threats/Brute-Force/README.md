@@ -40,7 +40,7 @@ DeviceLogonEvents
 | summarize FailedAttempts = count() by AccountName, DeviceName, bin(Timestamp, 5m)
 | where FailedAttempts > 5
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/1f45fbd9-f1cc-4e8f-9f75-5c550dd63aeb">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/99b5c53c-c592-44ae-882f-23f81e03b24f">
 
 ### 2. Searched the `DeviceFileEvents` Table
 
@@ -61,7 +61,7 @@ DeviceFileEvents
 | where DeviceName contains "thlinux"
 | project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessAccountDomain, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d90281cf-81cc-40ee-8c8e-582ef3adc93a">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/4fb540a8-4695-4771-8835-8aebcec32a6a">
 
 ### 3. Searched the `DeviceProcessEvents` Table
 
@@ -80,7 +80,7 @@ DeviceProcessEvents
 | where AccountName in ("baddog", "backdoor")
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/4b989818-b55e-4645-82dc-6c2bf8a80f29">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/c18ca88b-41cb-4964-93c0-747449c15c89">
 
 ### 4. Searched the `DeviceNetworkEvents` Table
 
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 | where RemoteIP != "Internal"  // Assuming internal traffic should be from known IP ranges
 | project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessAccountName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/f01822dd-8b3b-4851-b92a-8a4c88543690">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/553e5368-383d-4646-bdde-ee3072583550">
 
 ---
 
