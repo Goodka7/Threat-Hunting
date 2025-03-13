@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/cf2bfe69-30da-4a79-aaa4-6d2f0509ecf8"/>
+<img width="400" src="https://github.com/user-attachments/assets/dc5d02b6-c91f-48d4-8ae9-186f00bd9f82"/>
 
 # Threat Hunt Report: Malicious File Execution
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Malicious-File/Threat-Hunt-Event(Malicious%20File%20Execution).md)
@@ -69,8 +69,8 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/73098074-6caa-4872-8fd6-e93644314017">
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/a377c590-acde-4076-b04b-7062e462c148">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/cc3a9974-085f-430f-bcb5-70cc7fc8a53c">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/647b481c-00b5-4277-a200-76bd04f42014">
 
 ---
 
