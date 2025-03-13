@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/2b3b0257-dedc-4186-ad29-3c0994f45ca2"/>
+<img width="400" src="https://github.com/user-attachments/assets/3512d4c3-3c6f-4863-b255-a514cebd262e"/>
 
 # Threat Hunt Report: Data Theft
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Data-Theft/Threat-Hunt-Event(Data%20Theft).md)
@@ -55,8 +55,8 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "mv" or ProcessCommandLine contains "openssl"
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/5fd48424-aaa7-4228-a241-b2d721d4ddc5">
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/507a42b8-950d-4b7e-8466-76c56cbe9b72">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/0470abf8-df1a-444d-881e-8a80bb126593">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/86e7667f-6e7f-4b09-a8f3-55de02289092">
 
 ---
 
