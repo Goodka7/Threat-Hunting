@@ -1,7 +1,7 @@
 <img width="400" src="https://github.com/user-attachments/assets/495a74f2-9b7d-4f44-9017-015d6449675f"/>
 
 # Threat Hunt Report: Brute Force
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Brute-Force/Threat-Hunt-Event(Brute%20Force).md)
+- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Brute-Force/Threat-Hunt-Event(Brute%20Force).md)
   
 ## Platforms and Languages Leveraged
 - Linux (Ubuntu 22.04) Virtual Machines (Microsoft Azure)
