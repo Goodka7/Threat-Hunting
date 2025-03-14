@@ -1,5 +1,4 @@
-# My Project
-<img width="400" src="https://github.com/user-attachments/assets/a3057464-cfa8-47fb-ad30-4c32c61e4c7d"/>
+<img width="400" src="https://github.com/user-attachments/assets/01f2e42e-c323-4d12-87f9-51a5cf7bd0f1">
 
 # Threat Hunt Report: Unauthorized System Configuration Changes
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/System-Configuration/Threat-Hunt-Event(Scenario%20Configuration).md)
@@ -41,7 +40,7 @@ DeviceRegistryEvents
 | where ActionType in ("RegistryValueSet", "RegistryValueDeleted")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, ActionType
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/dca4eca9-ae52-4e44-bb01-596a9a4e80af">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/3a717570-1430-4617-9121-25cb7f520a1c">
 
 ---
 
@@ -82,7 +81,7 @@ DeviceNetworkEvents
 | where ActionType in ("ConnectionSuccess", "ConnectionFailed")
 | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, ActionType, InitiatingProcessFileName, InitiatingProcessAccountName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/58865235-2a2c-4c44-ab32-dd0c0b933b23">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/2f852405-c992-4616-a540-d93f12c2d97e">
 
 ---
 
@@ -102,7 +101,7 @@ DeviceProcessEvents
 | where ProcessCommandLine has "administrators"
 | project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessAccountName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/aed5e71a-8641-4b5b-bf64-119cc0f9a010">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/76f00920-f210-4e04-a98c-d1e8f0b010f2">
 
 ---
 
