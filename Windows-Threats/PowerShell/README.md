@@ -80,7 +80,7 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/174ae903-0760-45c1-99f2-466c20443bdf)">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/174ae903-0760-45c1-99f2-466c20443bdf">
 
 ---
 
