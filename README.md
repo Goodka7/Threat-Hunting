@@ -8,7 +8,7 @@ A collection of threat hunts for different attack scenarios.
   - [Data Theft](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Data-Theft/README.md)
   - [Insider Threat](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Insider-Threat/README.md)
   - [Malicious File](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Malicious-File/README.md)
-  - [Persistence](#privilege-escalation)
+  - [Persistence](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Persistence/README.md)
 - [Windows Threats](#windows-threats)
   - [PowerShell Execution](#powershell-execution)
   - [Kerberoasting](#kerberoasting)
