@@ -1,4 +1,4 @@
-<img width="300" src="https://github.com/user-attachments/assets/2376216a-b92d-424a-b400-70b29f10ab5b"/>
+<img width="300" src="https://github.com/user-attachments/assets/2376216a-b92d-424a-b400-70b29f10ab5b">
 
 # Threat Hunt Report: Suspicious PowerShell Activity
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/PowerShell/Threat-Hunt-Event(PowerShell).md)
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/926684fe-1507-4af8-abc5-3c8d466f3de2">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/5fdc0e14-fa2e-41cf-9c43-4fb672547159">
 
 ---
 
@@ -80,7 +80,7 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/fc3c072b-e1e1-43c7-862c-6dce9f305d5c">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/174ae903-0760-45c1-99f2-466c20443bdf)">
 
 ---
 
