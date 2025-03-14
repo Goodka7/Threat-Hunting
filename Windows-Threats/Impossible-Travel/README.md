@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/c878e233-d060-4f34-96e9-deb4bcc32fe8"/>
+<img width="400" src="https://github.com/user-attachments/assets/9286bb37-ccd0-4541-bf21-f9174e069207"/>
 
 # Threat Hunt Report: Impossible Travel
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Impossible-Travel/Threat-Hunting-Event(Impossible%20Travel).md)
@@ -36,7 +36,7 @@ DeviceLogonEvents
 | project Timestamp, AccountName, DeviceName, RemoteIP
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/6e3da45a-4ab1-4d06-8ad3-fad9a877ae70">
+<img width="1212" alt="image" src="!https://github.com/user-attachments/assets/0861be4f-d525-43be-bfcb-9078936c8674">
 
 ---
 
@@ -61,7 +61,7 @@ DeviceLogonEvents
 | project Timestamp, AccountName, DeviceName, RemoteIP
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/45288972-df92-47bb-9acc-45959bc34f3d">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/255e1195-aee3-49e2-a2e6-340947484962">
 
 ---
 
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, RemoteIP, LocalIP, ActionType, InitiatingProcessAccountName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/92db7d4a-d5c2-4695-bb18-45d5de33944e">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/f31bbb2a-fdad-4efb-b015-099ab68e2c81">
 
 ---
 
@@ -107,7 +107,7 @@ DeviceProcessEvents
 | project Timestamp, AccountName, DeviceName, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/aed5e71a-8641-4b5b-bf64-119cc0f9a010">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/73cdfa30-04c3-40fa-8487-5271abba2c6b">
 
 ---
 
