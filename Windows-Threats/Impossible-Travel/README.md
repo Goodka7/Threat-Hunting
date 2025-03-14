@@ -1,7 +1,7 @@
 <img width="400" src="https://github.com/user-attachments/assets/9286bb37-ccd0-4541-bf21-f9174e069207"/>
 
 # Threat Hunt Report: Impossible Travel
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Impossible-Travel/Threat-Hunting-Event(Impossible%20Travel).md)
+- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Impossible-Travel/Threat-Hunt-Event(Impossible%20Travel).md)
 
 ## Platforms and Languages Leveraged
 - Windows 10 Virtual Machines (Microsoft Azure)
