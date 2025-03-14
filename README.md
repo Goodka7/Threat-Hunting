@@ -10,6 +10,7 @@ A collection of threat hunts for different attack scenarios.
   - [Malicious File](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Malicious-File/README.md)
   - [Persistence](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Persistence/README.md)
 - [Windows Threats](#windows-threats)
+  - [Impossible Travel](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Impossible-Travel/README.md)
   - [PowerShell Execution](#powershell-execution)
   - [Kerberoasting](#kerberoasting)
 
