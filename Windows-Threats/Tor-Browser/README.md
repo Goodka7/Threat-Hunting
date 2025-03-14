@@ -42,8 +42,8 @@ DeviceFileEvents
 | order by Timestamp desc
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/6f212b1a-e4f5-40dc-be67-2a0e4bd44c62">
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/db49fe7f-ee5b-468a-bf32-a0affe7b282d">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/dc1e416a-09ab-4f01-b079-3d0b8dae8ccf">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/4598ede8-af87-4992-bb8e-01842887619b">
 
 ---
 
@@ -66,7 +66,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName, Command = ProcessCommandLine
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/a610791a-0559-410d-881d-397251039bbf">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/cd1d4c3b-c419-4dc2-921f-2f7303f27f41">
 
 ---
 
@@ -89,7 +89,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName, Command = ProcessCommandLine
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/785257b9-5e7c-4ce6-8bb2-f9f0c8c59f0f">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/7beaa909-d5ec-4b60-922a-8161a018ee30">
 
 ---
 
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath  
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/f88b30e1-ccca-4a3a-b601-65992d08f1d3">
+<img width="1212" alt="image" src="(https://github.com/user-attachments/assets/1a3cd049-4bc1-4d09-a5f1-bb2b4f8b53e9">
 
 ---
 
