@@ -104,7 +104,7 @@ DeviceRegistryEvents
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueType, RegistryValueData, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/fbce844e-8ebd-40ad-96e0-49d0ddae1ce8">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/e0c4579e-ed36-4e01-941e-ab18f0ca19d2">
 
 ---
 
