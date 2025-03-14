@@ -2,7 +2,7 @@
 <img width="400" src="https://github.com/user-attachments/assets/a3057464-cfa8-47fb-ad30-4c32c61e4c7d"/>
 
 # Threat Hunt Report: Unauthorized System Configuration Changes
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-SystemConfig-/blob/main/resources/Threat-Hunt-Event(SystemConfig).md)
+- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/System-Configuration/Threat-Hunt-Event(Scenario%20Configuration).md)
 
 ## Platforms and Languages Leveraged
 - Windows 10 Virtual Machines (Microsoft Azure)
