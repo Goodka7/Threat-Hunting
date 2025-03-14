@@ -1,4 +1,4 @@
-<img width="300" src="https://github.com/user-attachments/assets/9c09c98f-0e0f-40f4-a921-696b5fd7e44e" alt="Red PowerShell logo"/>
+<img width="300" src="https://github.com/user-attachments/assets/2376216a-b92d-424a-b400-70b29f10ab5b"/>
 
 # Threat Hunt Report: Suspicious PowerShell Activity
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/PowerShell/Threat-Hunt-Event(PowerShell).md)
