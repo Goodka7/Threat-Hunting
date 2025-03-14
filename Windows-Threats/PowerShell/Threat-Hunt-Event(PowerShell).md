@@ -39,7 +39,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/e5e5fee9-fa90-403b-aed5-4553926bf119">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d590916f-3775-4b27-880a-4c6bd0120034">
 
 ---
 
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/926684fe-1507-4af8-abc5-3c8d466f3de2">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/76b0ffbd-4b30-4943-ae6f-e9a6deddf51e">
 
 ---
 
@@ -80,7 +80,7 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/fc3c072b-e1e1-43c7-862c-6dce9f305d5c">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/146d347d-bd6a-4907-94c4-9c38c13cc2bc">
 
 ---
 
@@ -104,7 +104,7 @@ DeviceRegistryEvents
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueType, RegistryValueData, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/fbce844e-8ebd-40ad-96e0-49d0ddae1ce8">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/00529dc3-166f-46b1-9c57-0beed03acea8">
 
 ---
 
