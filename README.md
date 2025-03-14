@@ -11,7 +11,7 @@ A collection of threat hunts for different attack scenarios.
   - [Persistence](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Persistence/README.md)
 - [Windows Threats](#windows-threats)
   - [Impossible Travel](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Impossible-Travel/README.md)
-  - [PowerShell Execution](#powershell-execution)
+  - [PowerShell](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/PowerShell/README.md)
   - [Kerberoasting](#kerberoasting)
 
 
