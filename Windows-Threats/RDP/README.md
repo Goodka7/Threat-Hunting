@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/8c336c48-6bc5-428c-b4be-8af9575c9a83" alt="Computer with 'RDP' on it."/>
+<img width="400" src="https://github.com/user-attachments/assets/3db1991c-603a-4d45-a979-ffe54400bde7">
 
 # Threat Hunt Report: Unauthorized RDP Access
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/RDP/Threat-Hunt-Event(RDP).md)
@@ -44,7 +44,7 @@ DeviceLogonEvents
 | where ActionType in ("LogonFailed", "LogonSuccess")  // Focus on logon attempts
 | project Timestamp, DeviceName, AccountName, LogonType, ActionType, RemoteIP
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/593766f7-a106-4ab7-9c0e-ce0173d073d2">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/c94ba8ce-97a3-4d15-b4d8-57d6ecf82cae">
 
 ---
 
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 | where DeviceName == "thscenariovm"
 | project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/e3f3394a-8095-47d2-8093-15988fc8666b">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/a49db2ee-cf18-49bc-a08e-258c2ae6c7cd">
 
 ---
 
@@ -91,7 +91,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/006dd09d-a56e-4bb3-b71e-382de5bb7ce6">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/07c7a08d-a649-424d-9c1b-4dc72c6b4dec">
 
 ---
 
