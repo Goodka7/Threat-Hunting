@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/0912ebf5-3d20-4966-b083-ebf02fbf0ff6"/>
+<img width="400" src="https://github.com/user-attachments/assets/0615b755-f109-41bc-b507-2487458b3b28"/>
 
 # Threat Hunt Report: Unauthorized Persistence Creation
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-Persistence-/blob/main/resources/Threat-Hunt-Event(Persistence).md)
@@ -66,8 +66,8 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "/tmp/rootbash"
 | project Timestamp, DeviceName, AccountName, ActionType, ProcessCommandLine
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/3c1fabbb-7fc1-4978-a99c-763d777dc109">
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/cae6aeea-aa55-45e2-b0e4-e5d8b896dd84">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/3c6a9a56-f1f5-468e-8bb8-eb65a3729cf0">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/b0209ad3-4eb9-4662-b2eb-778b299c8872">
 
 ---
 
@@ -88,7 +88,7 @@ DeviceLogonEvents
 | where LogonType in ("RemoteInteractive", "Network")
 | project Timestamp, DeviceName, AccountName, RemoteIP, LogonType
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/c6eb0196-2d43-4f1f-bd9a-8b7acf6862cd">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d7606204-29ee-4ffc-997e-4b03ca12cc15">
 
 ---
 
@@ -119,7 +119,7 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "malicious.service"
 | project Timestamp, DeviceName, ActionType, ProcessCommandLine
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/bab374b0-e90b-4c57-9689-a24fb506bf49">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/1af5ea04-96d0-4d57-888c-4136ce77bbff">
 
 ---
 
@@ -142,7 +142,7 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "/home/baddog/.local/bin/ls"
 | project Timestamp, DeviceName, AccountName, ActionType, ProcessCommandLine 
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/505f75e4-e504-4865-87d9-1289d69ee748">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/7a3dd5de-d1d3-495c-9664-59b0025ceafe">
 
 ---
 
