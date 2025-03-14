@@ -39,7 +39,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/e5e5fee9-fa90-403b-aed5-4553926bf119">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/145823a1-da2c-4776-811c-628e504b3c54">
 
 ---
 
