@@ -1,7 +1,7 @@
 <img width="400" src="https://github.com/user-attachments/assets/0615b755-f109-41bc-b507-2487458b3b28"/>
 
 # Threat Hunt Report: Unauthorized Persistence Creation
-- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting-Persistence-/blob/main/resources/Threat-Hunt-Event(Persistence).md)
+- [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Persistence/Threat-Hunting-Event(Persistence).md)
 
 ## Platforms and Languages Leveraged
 - Linux (Ubuntu 22.04) Virtual Machines (Microsoft Azure)
