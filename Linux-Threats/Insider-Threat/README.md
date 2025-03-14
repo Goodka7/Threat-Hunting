@@ -1,4 +1,4 @@
-<img width="400" src="https://github.com/user-attachments/assets/c741101c-04f7-4115-90f3-77d677585dbd"/>
+<img width="400" src="https://github.com/user-attachments/assets/fbb5a877-6f3c-4648-9f2f-a28d3a3973db"/>
 
 # Threat Hunt Report: Insider Threat
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Insider-Threat/Threat-Hunt-Event(Insider%20Threat).md)
@@ -70,7 +70,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/c09cb332-de6e-46da-927f-b1741da25298">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/c58f530e-3f59-4a33-adf9-e0cc86a12d69">
 
 ---
 
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/145de6e0-1938-4540-8029-9e8903a4fdbc">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/7578f4a1-45a1-48bd-9730-a6d4f3a53b97">
 
 ---
 
