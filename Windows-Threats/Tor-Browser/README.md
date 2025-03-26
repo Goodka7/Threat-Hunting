@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/44bac428-01bb-4fe9-9d85-96cba7698bee" alt="Tor Logo with the onion and a crosshair on it"/>
+</div>
 
 # Threat Hunt Report: Unauthorized TOR Usage
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/Tor-Browser/Threat-Hunt-Event(Tor).md)
