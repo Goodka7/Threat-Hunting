@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/01f2e42e-c323-4d12-87f9-51a5cf7bd0f1">
+</div>
 
 # Threat Hunt Report: Unauthorized System Configuration Changes
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/System-Configuration/Threat-Hunt-Event(Scenario%20Configuration).md)
