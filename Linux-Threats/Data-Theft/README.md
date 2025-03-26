@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/3512d4c3-3c6f-4863-b255-a514cebd262e"/>
+</div>
 
 # Threat Hunt Report: Data Theft
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Data-Theft/Threat-Hunt-Event(Data%20Theft).md)
