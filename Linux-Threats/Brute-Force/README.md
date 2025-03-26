@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/6a46313d-3206-4b85-b8e6-921e23943126"/>
+</div>
 
 # Threat Hunt Report: Brute Force
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Brute-Force/Threat-Hunt-Event(Brute%20Force).md)
