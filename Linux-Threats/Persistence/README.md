@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/0615b755-f109-41bc-b507-2487458b3b28"/>
+</div>
 
 # Threat Hunt Report: Unauthorized Persistence Creation
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Persistence/Threat-Hunting-Event(Persistence).md)
