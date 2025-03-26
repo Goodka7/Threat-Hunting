@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/fbb5a877-6f3c-4648-9f2f-a28d3a3973db"/>
+</div>
 
 # Threat Hunt Report: Insider Threat
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Insider-Threat/Threat-Hunt-Event(Insider%20Threat).md)
