@@ -1,6 +1,6 @@
-# Threat Hunts 🚀
+# Threat Hunts & Incident Response 🚀
 
-#### A collection of threat hunts for different attack scenarios on Linux and Windows.
+#### A collection of threat hunts/ incident responses for different attack scenarios on Linux and Windows.
 
 ## 📜 Table of Contents
 - [Linux Threats](https://github.com/Goodka7/Threat-Hunting/tree/main/Linux-Threats)
