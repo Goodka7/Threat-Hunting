@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/3db1991c-603a-4d45-a979-ffe54400bde7">
+</div>
 
 # Threat Hunt Report: Unauthorized RDP Access
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Windows-Threats/RDP/Threat-Hunt-Event(RDP).md)
