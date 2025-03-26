@@ -1,4 +1,6 @@
+<div align="center">
 <img width="400" src="https://github.com/user-attachments/assets/dc5d02b6-c91f-48d4-8ae9-186f00bd9f82"/>
+</div>
 
 # Threat Hunt Report: Malicious File Execution
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/Linux-Threats/Malicious-File/Threat-Hunt-Event(Malicious%20File%20Execution).md)
