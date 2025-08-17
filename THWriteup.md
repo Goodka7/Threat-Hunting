@@ -23,7 +23,7 @@ Nothing in the system adds up... unless you know where to look.
 
 ## Executive Summary
 
-
+Between July 17–20, 2025, insider activity was identified on nathan-iel-vm that targeted HR data and audit controls. The actor leveraged PowerShell and native Windows tools to escalate privileges, disable endpoint protections, establish persistence, and exfiltrate sensitive HR configuration files. Tampering with promotion candidate records and repeated access to the personnel file of Carlos Tanaka strongly suggest a fraudulent motive tied to internal promotion processes. Multiple anti-forensic attempts were observed, including event log clearing and AV policy manipulation, indicating deliberate stealth. Data exfiltration occurred through outbound connections to a .net domain (52.54.13.125). The activity represents a successful insider-driven HR data manipulation and exfiltration event with material impact on personnel processes and data integrity.
 
 ---
 
@@ -37,7 +37,7 @@ Nothing in the system adds up... unless you know where to look.
 | **3** | What is the value of the command | `"powershell.exe" net localgroup Administrators` |
 | **4** | Value of the program tied to this activity | `qwinsta.exe` |
 | **5** | Value used to execute command | `"powershell.exe" -Command "Set-MpPreference -DisableRealtimeMonitoring $true"` |
-| **6** | |
+| **6** | Provide the name of the registry value | `DisableAntiSpyware`
 | **7** | HR related file name associated with this tactic | `HRConfig.json` |
 | **8** | Value of the associated command | `"notepad.exe" C:\HRTools\HRConfig.json` |
 | **9** | TLD of the unusual outbound connection | `.net` |
@@ -45,8 +45,8 @@ Nothing in the system adds up... unless you know where to look.
 | **11** | File name tied to the registry value | `OnboardTracker.ps1` |
 | **12** | Name of the personnel that was repeatedly accessed | `Carlos Tanaka` |
 | **13** | SHA1 value of first instance where the file in question is modified | `65a5195e9a36b6ce73fdb40d744e0a97f0aa1d34` |
-| **14** | Exfiltration process MD5 | `2e5a8590cf6848968fc23de3fa1e25f1` |
-| **15** | Final exfil destination IP | `104.22.69.199` |
+| **14** | Identify when the first attempt at clearing the trail | `2025-07-19T05:38:55.6800388Z` |
+| **15** | Identify when the last associated attempt occurred | `2025-07-19T06:18:38.6841044Z` |
 
 ---
 ## Flag by Flag
@@ -420,11 +420,7 @@ DeviceProcessEvents
 | sort by Timestamp desc
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 ```
-
 **wevtutil.exe is regularly leveraged to delete logs, so all I had to do was look for the first "wevtutil.exe" cl (log).**
-
-<img width="1193" height="136" alt="f3440e1b-0787-4bbd-b0df-c9fa53fde588" src="https://github.com/user-attachments/assets/940171b9-78e2-448f-bf9c-e3a0d102d5da" />
-
 
 ### Flag 15 – Final Cleanup and Exit Prep
 
@@ -439,8 +435,56 @@ Every digital intruder knows — clean up before you leave or you’re already c
 
 
 **Identify when the last associated attempt occurred:**
+2025-07-19T06:18:38.6841044Z
 
 **KQL Query Used:**
 ```
-
+DeviceFileEvents
+| where DeviceName == "nathan-iel-vm"
+| where InitiatingProcessAccountName == "nathan13l_vm"
+| order by Timestamp desc
 ```
+## MITRE ATT&CK Technique Mapping
+
+| Flag | MITRE Technique | ID        | Description |
+|------|-----------------|-----------|-------------|
+| 1    | PowerShell | T1059.001 | Initial use of PowerShell for script execution. |
+| 2    | Application Layer Protocol | T1071 | Beaconing via HTTPS to external infrastructure (pipedream.net). |
+| 3    | Registry Run Keys/Startup Folder | T1547.001 | Persistence via HKCU\...\Run registry key with C2.ps1. |
+| 4    | Scheduled Task/Job | T1053.005 | Alternate persistence through scheduled task SimC2Task. |
+| 5    | Obfuscated Files or Information | T1027 | Execution of base64-encoded PowerShell command. |
+| 6    | Indicator Removal on Host | T1070 | PowerShell v2 downgrade to bypass AMSI/logging. |
+| 7    | Remote Services: Scheduled Task | T1021.003 | Lateral movement using schtasks.exe targeting victor-disa-vm. |
+| 8    | Lateral Tool Transfer | T1570 | Use of .lnk files like savepoint_sync.lnk to stage/pivot. |
+| 8.1  | Registry Modification | T1112 | savepoint_sync.ps1 registered for autorun. |
+| 9    | Application Layer Protocol | T1071.001 | New beaconing to eo1v1texxlrdq3v.m.pipedream.net. |
+| 10   | WMI Event Subscription | T1546.003 | Stealth persistence via WMI script beacon_sync_job_flag2.ps1. |
+| 11   | Credential Dumping Simulation | T1003 | Mimic of credential access via mimidump_sim.txt. |
+| 12   | Data Staged: Local | T1074.001 | PowerShell process connects to drive.google.com. |
+| 13   | Data from Information Repositories | T1213 | Access of sensitive doc RolloutPlan_v8_477.docx. |
+| 14   | Archive Collected Data | T1560.001 | Use of Compress-Archive to prepare ZIP payload. |
+| 15   | Ingress Tool Transfer | T1105 | Staging of spicycore_loader_flag8.zip. |
+| 16   | Scheduled Task/Job | T1053.005 | Final scheduled task SpicyPayloadSync set to trigger script on logon. |
+
+---
+
+## Diamond Model of Intrusion Analysis
+
+The Diamond Model breaks down an intrusion event into four core features: Adversary, Infrastructure, Capability, and Victim.  
+
++-----------------+ +------------------+
+| |<----->| |
+| Adversary | | Infrastructure |
+| Phantom Group | | pipedream.net, |
+| (Possible | | drive.google.com |
+| Mercenary Unit) | | beacon_sync.ps1 |
++-----------------+ +------------------+
+^ |
+| v
++-----------------+ +------------------+
+| Victim |<----->| Capability |
+| acolyte756, | | PowerShell, WMI, |
+| victor-disa-vm | | Registry, LNK, |
+| User: acolight | | Scheduled Tasks |
++-----------------+ +------------------+
+
