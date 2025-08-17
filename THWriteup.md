@@ -78,7 +78,7 @@ Note: Used "Custom time range: 2025-07-17 to 2025-07-20"
 DeviceFileEvents
 | where FileName contains "HR"
 ```
-**Query made based on context clues, found the VM name quickly and it was correct.**
+-Query made based on context clues, found the VM name quickly and it was correct.
 
 ### 🚩 Flag 1 – Initial PowerShell Execution
 
@@ -102,7 +102,7 @@ Understanding where it all began helps chart every move that follows. Look for P
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "who"
 ```
-**I used this query because of the hint: Who, it turned out to have all the information I needed.**
+-I used this query because of the hint: Who, it turned out to have all the information I needed.
 
 ### 🚩 Flag 2 – Local Account Assessment
 
@@ -123,7 +123,7 @@ After knowing their own access level, intruders start scanning the local account
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "who"
 ```
-**Realted the the query above so didn't need to do anything extra.**
+-Realted to the query above so didn't need to do anything extra.
 
 ### 🚩 Flag 3 - Privileged Group Assessment
 
@@ -146,7 +146,7 @@ DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "powershell"
 ```
-**Query was made so I could observe the baseline powershell commands being ran, after scrolling down for a few seconds I saw the obvious command.**
+-Query was made so I could observe the baseline powershell commands being ran, after scrolling down for a few seconds I saw the obvious command.
 
 ### 🚩 Flag 4 – Active Session Discovery
 
@@ -168,7 +168,7 @@ DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "qwinsta"
 ```
-**The previous KQL query showed the next command used was "powershell.exe" qwinsta, out of curiosity I googled qwinsta and found out that it dealt with sessions... so I modified my search to look for the process name.**
+-The previous KQL query showed the next command used was "powershell.exe" qwinsta, out of curiosity I googled qwinsta and found out that it dealt with sessions... so I modified my search to look for the process name.
 
 
 ### 🚩 Flag 5 – Defender Configuration Recon
@@ -191,7 +191,7 @@ DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "powershell"
 ```
-**Third time using this same query, but it has a lot of good info if you just follow the timeline.**
+-Third time using this same query, but it has a lot of good info if you just follow the timeline.
 
 
 ### 🚩 Flag 6 – Defender Policy Modification
@@ -215,7 +215,7 @@ DeviceRegistryEvents
 | where RegistryValueName != ""
 | order by Timestamp asc
 ```
-**Given the clues, I knew it was related to Registry events, the "thought" was a big clue that it had to do with AntiVirus or Microsoft Defender**
+-Given the clues, I knew it was related to Registry events, the "thought" was a big clue that it had to do with AntiVirus or Microsoft Defender.
 
 ### 🚩 Flag 7 – Access to Credential-Rich Memory Space
 
@@ -239,7 +239,7 @@ DeviceProcessEvents
 | project Timestamp, FileName, ProcessCommandLine, AccountName, InitiatingProcessFileName
 | order by Timestamp asc
 ```
-**Query was made to look for common filenames that would be included for memory dumps**
+-Query was made to look for common filenames that would be included for memory dumps.
 
 
 ### 🚩 Flag 8 – File Inspection of Dumped Artifacts
@@ -265,7 +265,7 @@ DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "HRConfig.json"
 ```
-**Using the hint, was pretty easy to find.**
+-Using the hint, was pretty easy to find.
 
 ### 🚩 Flag 9 – Outbound Communication Test
 
@@ -314,7 +314,7 @@ DeviceNetworkEvents
 | project Timestamp, RemoteUrl, RemoteIP
 | order by Timestamp asc
 ```
-**Added RemoteIP to last query so I could read the IPs assosicated with the suspect .net TLD**
+-Added RemoteIP to last query so I could read the IPs assosicated with the suspect .net TLD.
 
 ### 🚩 Flag 11 – Persistence via Local Scripting
 
@@ -364,8 +364,7 @@ DeviceFileEvents
 | summarize AccessCount = count() by FileName, FolderPath
 | order by AccessCount desc
 ```
-**To be honest this one was kind of out there, I had seen a file before when I was running queries that had someone's name attached, so I just scrolled down and saw a name (format was the hint) and it happened to be correct.**
-
+-To be honest this one was kind of out there, I had seen a file before when I was running queries that had someone's name attached, so I just scrolled down and saw a name (format was the hint) and it happened to be correct.
 
 ### 🚩 Flag 13 – Candidate List Manipulation
 
@@ -393,7 +392,7 @@ DeviceFileEvents
 | where FileName contains "PromotionCandidates.csv"
 | project SHA1
 ```
-**Added to the query once I saw the appropriate file name, then projected SHA values so I could get the correct one.**
+-Added to the query once I saw the appropriate file name, then projected SHA values so I could get the correct one.
 
 ### 🚩 Flag 14 – Audit Trail Disruption
 
@@ -420,7 +419,7 @@ DeviceProcessEvents
 | sort by Timestamp desc
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 ```
-**wevtutil.exe is regularly leveraged to delete logs, so all I had to do was look for the first "wevtutil.exe" cl (log).**
+- wevtutil.exe is regularly leveraged to delete logs, so all I had to do was look for the first "wevtutil.exe" cl (log).
 
 ### 🚩Flag 15 – Final Cleanup and Exit Prep
 
