@@ -466,7 +466,7 @@ DeviceFileEvents
 
 # Lessons Learned
 
-- **Native tooling over malware.** The actor relied on built-in utilities for discovery and operational cover: PowerShell (“who*” discovery) (Flag 1–2), local admin group enumeration via `net localgroup Administrators` (Flag 3), and session enumeration with `qwinsta.exe` (Flag 4).  
+- **Native tooling over malware.** The actor relied on built-in utilities for discovery and operational cover: PowerShell (“whoami” discovery) (Flag 1–2), local admin group enumeration via `net localgroup Administrators` (Flag 3), and session enumeration with `qwinsta.exe` (Flag 4).  
 - **Deliberate weakening of endpoint defenses.** Defender protections were reduced using `Set-MpPreference -DisableRealtimeMonitoring $true` (Flag 5) and the `DisableAntiSpyware` registry value (Flag 6).  
 - **Persistence via Run key.** A PowerShell script (`OnboardTracker.ps1`) was configured for autorun through a Run-key entry (Flag 11).  
 - **Targeted HR data access and manipulation.** Sensitive HR artifacts were accessed and inspected (`HRConfig.json`, opened with `notepad.exe`) (Flags 7–8), a specific personnel record was repeatedly accessed (`Carlos Tanaka`) (Flag 12), and promotion data was modified (`PromotionCandidates.csv`, SHA1 captured) (Flag 13).  
