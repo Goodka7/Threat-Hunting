@@ -80,7 +80,7 @@ DeviceFileEvents
 ```
 **Query made based on context clues, found the VM name quickly and it was correct.**
 
-### Flag 1 – Initial PowerShell Execution
+### 🚩 Flag 1 – Initial PowerShell Execution
 
 **Objective:**
 Pinpoint the earliest suspicious PowerShell activity that marks the intruder's possible entry.
@@ -104,7 +104,7 @@ Understanding where it all began helps chart every move that follows. Look for P
 ```
 **I used this query because of the hint: Who, it turned out to have all the information I needed.**
 
-### Flag 2 – Local Account Assessment
+### 🚩 Flag 2 – Local Account Assessment
 
 **Objective:**
 Map user accounts available on the system.
@@ -125,7 +125,7 @@ After knowing their own access level, intruders start scanning the local account
 ```
 **Realted the the query above so didn't need to do anything extra.**
 
-### Flag 3 - Privileged Group Assessment
+### 🚩 Flag 3 - Privileged Group Assessment
 
 **Objective:**
 Identify elevated accounts on the target system.
@@ -148,7 +148,7 @@ DeviceProcessEvents
 ```
 **Query was made so I could observe the baseline powershell commands being ran, after scrolling down for a few seconds I saw the obvious command.**
 
-### Flag 4 – Active Session Discovery
+### 🚩 Flag 4 – Active Session Discovery
 
 **Objective:**
 Reveal which sessions are currently active for potential masking.
@@ -171,7 +171,7 @@ DeviceProcessEvents
 **The previous KQL query showed the next command used was "powershell.exe" qwinsta, out of curiosity I googled qwinsta and found out that it dealt with sessions... so I modified my search to look for the process name.**
 
 
-### Flag 5 – Defender Configuration Recon
+### 🚩 Flag 5 – Defender Configuration Recon
 
 **Objective:**
 Expose tampering or inspection of AV defenses, disguised under HR activity.
@@ -194,7 +194,7 @@ DeviceProcessEvents
 **Third time using this same query, but it has a lot of good info if you just follow the timeline.**
 
 
-### Flag 6 – Defender Policy Modification
+### 🚩 Flag 6 – Defender Policy Modification
 
 **Objective:**
 Validate if core system protection settings were modified.
@@ -217,7 +217,7 @@ DeviceRegistryEvents
 ```
 **Given the clues, I knew it was related to Registry events, the "thought" was a big clue that it had to do with AntiVirus or Microsoft Defender**
 
-### Flag 7 – Access to Credential-Rich Memory Space
+### 🚩 Flag 7 – Access to Credential-Rich Memory Space
 
 **Objective:**
 Identify if the attacker dumped memory content from a sensitive process.
@@ -242,7 +242,7 @@ DeviceProcessEvents
 **Query was made to look for common filenames that would be included for memory dumps**
 
 
-### Flag 8 – File Inspection of Dumped Artifacts
+### 🚩 Flag 8 – File Inspection of Dumped Artifacts
 
 **Objective:**
 Detect whether memory dump contents were reviewed post-collection.
@@ -267,7 +267,7 @@ DeviceProcessEvents
 ```
 **Using the hint, was pretty easy to find.**
 
-### Flag 9 – Outbound Communication Test
+### 🚩 Flag 9 – Outbound Communication Test
 
 **Objective:**
 Catch network activity establishing contact outside the environment.
@@ -291,7 +291,7 @@ DeviceNetworkEvents
 | order by Timestamp asc
 ```
 
-### Flag 10 – Covert Data Transfer
+### 🚩 Flag 10 – Covert Data Transfer
 
 **Objective:**
 Uncover evidence of internal data leaving the environment.
@@ -316,7 +316,7 @@ DeviceNetworkEvents
 ```
 **Added RemoteIP to last query so I could read the IPs assosicated with the suspect .net TLD**
 
-### Flag 11 – Persistence via Local Scripting
+### 🚩 Flag 11 – Persistence via Local Scripting
 
 **Objective:**
 Verify if unauthorized persistence was established via legacy tooling.
@@ -340,7 +340,7 @@ DeviceRegistryEvents
 | order by Timestamp asc
 ```
 
-### Flag 12 – Targeted File Reuse / Access
+### 🚩 Flag 12 – Targeted File Reuse / Access
 
 **Objective:**
 Surface the document that stood out in the attack sequence.
@@ -367,7 +367,7 @@ DeviceFileEvents
 **To be honest this one was kind of out there, I had seen a file before when I was running queries that had someone's name attached, so I just scrolled down and saw a name (format was the hint) and it happened to be correct.**
 
 
-### Flag 13 – Candidate List Manipulation
+### 🚩 Flag 13 – Candidate List Manipulation
 
 **Objective:**
 Trace tampering with promotion-related data.
@@ -395,7 +395,7 @@ DeviceFileEvents
 ```
 **Added to the query once I saw the appropriate file name, then projected SHA values so I could get the correct one.**
 
-###  Flag 14 – Audit Trail Disruption
+### 🚩 Flag 14 – Audit Trail Disruption
 
 **Objective:**
 Detect attempts to impair system forensics.
@@ -422,7 +422,7 @@ DeviceProcessEvents
 ```
 **wevtutil.exe is regularly leveraged to delete logs, so all I had to do was look for the first "wevtutil.exe" cl (log).**
 
-### Flag 15 – Final Cleanup and Exit Prep
+### 🚩Flag 15 – Final Cleanup and Exit Prep
 
 **Objective:**
 Capture the combination of anti-forensics actions signaling attacker exit.
@@ -470,21 +470,61 @@ DeviceFileEvents
 
 ## Diamond Model of Intrusion Analysis
 
-The Diamond Model breaks down an intrusion event into four core features: Adversary, Infrastructure, Capability, and Victim.  
++--------------------+         +----------------------+
+|     Adversary      |<------>|     Infrastructure   |
+|  Phantom Group     |         |  pipedream.net       |
+|  (Mercenary Unit?) |         |  drive.google.com    |
+|                    |         |  beacon_sync.ps1     |
++--------------------+         +----------------------+
+          ^                                  |
+          |                                  v
++--------------------+         +----------------------+
+|       Victim       |<------>|      Capability      |
+|  acolyte756        |         |  PowerShell, WMI,    |
+|  victor-disa-vm    |         |  Registry, LNK,      |
+|  User: acolight    |         |  Scheduled Tasks     |
++--------------------+         +----------------------+
 
-+-----------------+ +------------------+
-| |<----->| |
-| Adversary | | Infrastructure |
-| Phantom Group | | pipedream.net, |
-| (Possible | | drive.google.com |
-| Mercenary Unit) | | beacon_sync.ps1 |
-+-----------------+ +------------------+
-^ |
-| v
-+-----------------+ +------------------+
-| Victim |<----->| Capability |
-| acolyte756, | | PowerShell, WMI, |
-| victor-disa-vm | | Registry, LNK, |
-| User: acolight | | Scheduled Tasks |
-+-----------------+ +------------------+
 
+
+##  Lessons Learned
+
+### Attackers Prioritize Stealth over Speed
+Use of PowerShell, obfuscation, and native utilities (schtasks.exe, svchost.exe) highlights blending with legitimate activity to prolong access.  
+
+### Persistence Techniques Were Layered and Diverse
+Registry autoruns, scheduled tasks, and WMI-based persistence ensured redundancy and resilience against single-point remediation.  
+
+### Command-and-Control Infrastructure Evaded Traditional Detection
+Beaconing leveraged public services (pipedream.net, drive.google.com) to blend into normal outbound traffic, avoiding blocklists.  
+
+### Credential Theft Was Simulated Using Realistic Artifacts
+Artifacts such as mimidump_sim.txt suggest staging or red-team-level exercises emulating credential scraping.  
+
+### Lateral Movement Occurred Without Credential Changes
+Remote task creation demonstrated the adversary’s ability to reuse existing credentials without raising identity alerts.  
+
+---
+
+## Recommendations for Remediation
+
+### Implement Script Block Logging & Deep PowerShell Auditing
+Enable enhanced PowerShell logging (via GPO), forward logs to SIEM, and flag obfuscation/encoding or version downgrades.  
+
+### Audit and Harden Task Scheduler and WMI Interfaces
+Monitor schtasks.exe, Register-ScheduledTask, and WMI consumers/filters. Periodically audit persistence points with Sysinternals tools.  
+
+### Restrict Outbound Traffic to Known Good Destinations
+Use firewall egress rules and DNS allowlisting. Block suspicious destinations such as *.pipedream.net.  
+
+### Apply Lateral Movement Detection Rules
+Alert on schtasks /S, WinRM anomalies, or remote scheduled task creation. Correlate with unusual file access.  
+
+### Secure and Monitor Shared Directories
+Restrict access to Public, AppData, and Temp. Monitor for unauthorized .ps1 scripts and archive drops.  
+
+### Enhance User Credential Protection
+Enable LSASS protection (Credential Guard). Enforce MFA and strong credential policies for privileged accounts.  
+
+### Run Regular Threat Hunts Using MITRE ATT&CK Mapping
+Leverage mapped TTPs as hunting templates to continuously validate defenses against similar adversary behaviors.  
