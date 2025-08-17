@@ -27,7 +27,7 @@ Nothing in the system adds up... unless you know where to look.
 
 ---
 
-## ✅ Completed Flags
+## Completed Flags
 
 | Flag # | Objective | Value |
 |--------|-----------|-------|
@@ -55,8 +55,6 @@ Nothing in the system adds up... unless you know where to look.
 
 **Objective:**
 Before you officially begin the flags, you must first determine where to start hunting. Identify where to start hunting with the following: 
-
-1.
 
 **Intel Given:**
 - HR related stuffs or tools were recently touched, investigate any dropped scripts or configs over the mid-July weekends
