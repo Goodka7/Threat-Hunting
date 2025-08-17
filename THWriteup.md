@@ -447,7 +447,7 @@ DeviceFileEvents
 
 | Flag | MITRE Technique                               | ID         | Description |
 |------|-----------------------------------------------|------------|-------------|
-| 1    | PowerShell                                    | T1059.001  | Suspicious PowerShell execution (`who*` discovery command). |
+| 1    | PowerShell                                    | T1059.001  | Suspicious PowerShell execution (`whoami` discovery command). |
 | 2    | System Owner/User Discovery                   | T1033      | Account/user context enumeration (`whoami` activity). |
 | 3    | Permission Groups Discovery: Local Groups     | T1069.001  | Checked elevated accounts with `net localgroup Administrators`. |
 | 4    | System Owner/User Discovery                   | T1033      | Session enumeration using `qwinsta.exe` to reveal logged-in users. |
