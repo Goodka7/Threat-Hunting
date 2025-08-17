@@ -11,7 +11,7 @@ Timeframe: July 17 – 20, 2025
 
 ##  Scenario
 
-A sudden, unexplained promotion has triggered whispers across the executive floor. The recipient? A mid-level employee with no standout track record — at least, not one visible anymore.
+A sudden, unexplained promotion has triggered whispers across the executive floor. The recipient? A mid-level employee with no standout track record, at least, not one visible anymore.
 
 Internal HR systems show signs of tampering: audit logs wiped, performance reports edited, and sensitive employee reviews quietly exfiltrated. Behind the scenes, someone has buried the real story beneath layers of obfuscation, PowerShell trickery, and stealthy file manipulation.
 
@@ -471,7 +471,7 @@ DeviceFileEvents
 - **Persistence via Run key.** A PowerShell script (`OnboardTracker.ps1`) was configured for autorun through a Run-key entry (Flag 11).  
 - **Targeted HR data access and manipulation.** Sensitive HR artifacts were accessed and inspected (`HRConfig.json`, opened with `notepad.exe`) (Flags 7–8), a specific personnel record was repeatedly accessed (`Carlos Tanaka`) (Flag 12), and promotion data was modified (`PromotionCandidates.csv`, SHA1 captured) (Flag 13).  
 - **Anti-forensics to impair investigation.** Event logs were cleared using `wevtutil.exe` (first and last attempts recorded) (Flags 14–15).  
-- **External connectivity consistent with staging or testing.** Unusual outbound activity to a `.net` destination and an ICMP ping to `52.54.13.125` were observed (Flags 9–10). Content transfer is **not** demonstrated by the provided evidence.  
+- **External connectivity consistent with staging or testing.** Unusual outbound activity to a `.net` destination and ping to `52.54.13.125` were observed (Flags 9–10). Content transfer is **not** demonstrated by the provided evidence.  
 - **Scope (as evidenced).** All documented activity is on `nathan-iel-vm`; no lateral movement is evidenced in the flags provided.
 
 ---
