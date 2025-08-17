@@ -456,12 +456,11 @@ DeviceFileEvents
 | 7    | Data from Local System                        | T1005      | Accessed HR-related file `HRConfig.json`. |
 | 8    | Data from Local System                        | T1005      | Opened `C:\HRTools\HRConfig.json` with `notepad.exe` for inspection. |
 | 9    | Application Layer Protocol: Web               | T1071.001  | Outbound connection to unusual `.net` domain. |
-| 10   | Non-Application Layer Protocol                | T1095      | ICMP ping to external IP `52.54.13.125`. |
-| 11   | Registry Run Keys/Startup Folder              | T1547.001  | Persistence via Run key referencing `OnboardTracker.ps1`. |
-| 12   | Data from Local System                        | T1005      | Repeated access to personnel file `Carlos Tanaka`. |
-| 13   | Data Manipulation: Stored Data                | T1565.001  | Modified `PromotionCandidates.csv` (SHA1 recorded). |
-| 14   | Clear Windows Event Logs                      | T1070.001  | Used `wevtutil.exe cl` to clear Windows event logs. |
-| 15   | Indicator Removal on Host                     | T1070      | Final cleanup attempt removing artifacts and traces. |
+| 10   | Registry Run Keys/Startup Folder              | T1547.001  | Persistence via Run key referencing `OnboardTracker.ps1`. |
+| 11   | Data from Local System                        | T1005      | Repeated access to personnel file `Carlos Tanaka`. |
+| 12   | Data Manipulation: Stored Data                | T1565.001  | Modified `PromotionCandidates.csv` (SHA1 recorded). |
+| 13   | Clear Windows Event Logs                      | T1070.001  | Used `wevtutil.exe cl` to clear Windows event logs. |
+| 14   | Indicator Removal on Host                     | T1070      | Final cleanup attempt removing artifacts and traces. |
 
 ---
 
