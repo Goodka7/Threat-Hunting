@@ -443,87 +443,60 @@ DeviceFileEvents
 | where InitiatingProcessAccountName == "nathan13l_vm"
 | order by Timestamp desc
 ```
-## MITRE ATT&CK Technique Mapping
+## MITRE ATT&CK Technique Mapping (Evidence-Only)
 
-| Flag | MITRE Technique | ID        | Description |
-|------|-----------------|-----------|-------------|
-| 1    | PowerShell | T1059.001 | Initial use of PowerShell for script execution. |
-| 2    | Application Layer Protocol | T1071 | Beaconing via HTTPS to external infrastructure (pipedream.net). |
-| 3    | Registry Run Keys/Startup Folder | T1547.001 | Persistence via HKCU\...\Run registry key with C2.ps1. |
-| 4    | Scheduled Task/Job | T1053.005 | Alternate persistence through scheduled task SimC2Task. |
-| 5    | Obfuscated Files or Information | T1027 | Execution of base64-encoded PowerShell command. |
-| 6    | Indicator Removal on Host | T1070 | PowerShell v2 downgrade to bypass AMSI/logging. |
-| 7    | Remote Services: Scheduled Task | T1021.003 | Lateral movement using schtasks.exe targeting victor-disa-vm. |
-| 8    | Lateral Tool Transfer | T1570 | Use of .lnk files like savepoint_sync.lnk to stage/pivot. |
-| 8.1  | Registry Modification | T1112 | savepoint_sync.ps1 registered for autorun. |
-| 9    | Application Layer Protocol | T1071.001 | New beaconing to eo1v1texxlrdq3v.m.pipedream.net. |
-| 10   | WMI Event Subscription | T1546.003 | Stealth persistence via WMI script beacon_sync_job_flag2.ps1. |
-| 11   | Credential Dumping Simulation | T1003 | Mimic of credential access via mimidump_sim.txt. |
-| 12   | Data Staged: Local | T1074.001 | PowerShell process connects to drive.google.com. |
-| 13   | Data from Information Repositories | T1213 | Access of sensitive doc RolloutPlan_v8_477.docx. |
-| 14   | Archive Collected Data | T1560.001 | Use of Compress-Archive to prepare ZIP payload. |
-| 15   | Ingress Tool Transfer | T1105 | Staging of spicycore_loader_flag8.zip. |
-| 16   | Scheduled Task/Job | T1053.005 | Final scheduled task SpicyPayloadSync set to trigger script on logon. |
+| Flag | MITRE Technique                               | ID         | Description |
+|------|-----------------------------------------------|------------|-------------|
+| 1    | PowerShell                                    | T1059.001  | Suspicious PowerShell execution (`who*` discovery command). |
+| 2    | System Owner/User Discovery                   | T1033      | Account/user context enumeration (`whoami` activity). |
+| 3    | Permission Groups Discovery: Local Groups     | T1069.001  | Checked elevated accounts with `net localgroup Administrators`. |
+| 4    | System Owner/User Discovery                   | T1033      | Session enumeration using `qwinsta.exe` to reveal logged-in users. |
+| 5    | Impair Defenses: Disable or Modify Tools      | T1562.001  | Disabled Defender real-time monitoring via PowerShell (`Set-MpPreference`). |
+| 6    | Modify Registry                               | T1112      | Registry change (`DisableAntiSpyware`) to weaken endpoint defenses. |
+| 7    | Data from Local System                        | T1005      | Accessed HR-related file `HRConfig.json`. |
+| 8    | Data from Local System                        | T1005      | Opened `C:\HRTools\HRConfig.json` with `notepad.exe` for inspection. |
+| 9    | Application Layer Protocol: Web               | T1071.001  | Outbound connection to unusual `.net` domain. |
+| 10   | Non-Application Layer Protocol                | T1095      | ICMP ping to external IP `52.54.13.125`. |
+| 11   | Registry Run Keys/Startup Folder              | T1547.001  | Persistence via Run key referencing `OnboardTracker.ps1`. |
+| 12   | Data from Local System                        | T1005      | Repeated access to personnel file `Carlos Tanaka`. |
+| 13   | Data Manipulation: Stored Data                | T1565.001  | Modified `PromotionCandidates.csv` (SHA1 recorded). |
+| 14   | Clear Windows Event Logs                      | T1070.001  | Used `wevtutil.exe cl` to clear Windows event logs. |
+| 15   | Indicator Removal on Host                     | T1070      | Final cleanup attempt removing artifacts and traces. |
 
 ---
 
-## Diamond Model of Intrusion Analysis
+# Lessons Learned
 
-+--------------------+         +----------------------+
-|     Adversary      |<------>|     Infrastructure   |
-|  Phantom Group     |         |  pipedream.net       |
-|  (Mercenary Unit?) |         |  drive.google.com    |
-|                    |         |  beacon_sync.ps1     |
-+--------------------+         +----------------------+
-          ^                                  |
-          |                                  v
-+--------------------+         +----------------------+
-|       Victim       |<------>|      Capability      |
-|  acolyte756        |         |  PowerShell, WMI,    |
-|  victor-disa-vm    |         |  Registry, LNK,      |
-|  User: acolight    |         |  Scheduled Tasks     |
-+--------------------+         +----------------------+
-
-
-
-##  Lessons Learned
-
-### Attackers Prioritize Stealth over Speed
-Use of PowerShell, obfuscation, and native utilities (schtasks.exe, svchost.exe) highlights blending with legitimate activity to prolong access.  
-
-### Persistence Techniques Were Layered and Diverse
-Registry autoruns, scheduled tasks, and WMI-based persistence ensured redundancy and resilience against single-point remediation.  
-
-### Command-and-Control Infrastructure Evaded Traditional Detection
-Beaconing leveraged public services (pipedream.net, drive.google.com) to blend into normal outbound traffic, avoiding blocklists.  
-
-### Credential Theft Was Simulated Using Realistic Artifacts
-Artifacts such as mimidump_sim.txt suggest staging or red-team-level exercises emulating credential scraping.  
-
-### Lateral Movement Occurred Without Credential Changes
-Remote task creation demonstrated the adversary’s ability to reuse existing credentials without raising identity alerts.  
+- **Native tooling over malware.** The actor relied on built-in utilities for discovery and operational cover: PowerShell (“who*” discovery) (Flag 1–2), local admin group enumeration via `net localgroup Administrators` (Flag 3), and session enumeration with `qwinsta.exe` (Flag 4).  
+- **Deliberate weakening of endpoint defenses.** Defender protections were reduced using `Set-MpPreference -DisableRealtimeMonitoring $true` (Flag 5) and the `DisableAntiSpyware` registry value (Flag 6).  
+- **Persistence via Run key.** A PowerShell script (`OnboardTracker.ps1`) was configured for autorun through a Run-key entry (Flag 11).  
+- **Targeted HR data access and manipulation.** Sensitive HR artifacts were accessed and inspected (`HRConfig.json`, opened with `notepad.exe`) (Flags 7–8), a specific personnel record was repeatedly accessed (`Carlos Tanaka`) (Flag 12), and promotion data was modified (`PromotionCandidates.csv`, SHA1 captured) (Flag 13).  
+- **Anti-forensics to impair investigation.** Event logs were cleared using `wevtutil.exe` (first and last attempts recorded) (Flags 14–15).  
+- **External connectivity consistent with staging or testing.** Unusual outbound activity to a `.net` destination and an ICMP ping to `52.54.13.125` were observed (Flags 9–10). Content transfer is **not** demonstrated by the provided evidence.  
+- **Scope (as evidenced).** All documented activity is on `nathan-iel-vm`; no lateral movement is evidenced in the flags provided.
 
 ---
 
 ## Recommendations for Remediation
 
-### Implement Script Block Logging & Deep PowerShell Auditing
-Enable enhanced PowerShell logging (via GPO), forward logs to SIEM, and flag obfuscation/encoding or version downgrades.  
-
-### Audit and Harden Task Scheduler and WMI Interfaces
-Monitor schtasks.exe, Register-ScheduledTask, and WMI consumers/filters. Periodically audit persistence points with Sysinternals tools.  
-
-### Restrict Outbound Traffic to Known Good Destinations
-Use firewall egress rules and DNS allowlisting. Block suspicious destinations such as *.pipedream.net.  
-
-### Apply Lateral Movement Detection Rules
-Alert on schtasks /S, WinRM anomalies, or remote scheduled task creation. Correlate with unusual file access.  
-
-### Secure and Monitor Shared Directories
-Restrict access to Public, AppData, and Temp. Monitor for unauthorized .ps1 scripts and archive drops.  
-
-### Enhance User Credential Protection
-Enable LSASS protection (Credential Guard). Enforce MFA and strong credential policies for privileged accounts.  
-
-### Run Regular Threat Hunts Using MITRE ATT&CK Mapping
-Leverage mapped TTPs as hunting templates to continuously validate defenses against similar adversary behaviors.  
+- **Containment and scoping**
+  - Isolate `nathan-iel-vm`.  
+  - Block and monitor the external IP `52.54.13.125` and investigate associated `.net` destinations observed (Flags 9–10).  
+- **Eradication**
+  - Remove the Run-key persistence referencing `OnboardTracker.ps1`; delete or quarantine the script (Flag 11).  
+  - Restore Defender settings, re-enable real-time protection, and verify the `DisableAntiSpyware` value is not set (Flags 5–6).  
+- **Recovery and validation**
+  - Perform a full AV/EDR scan on `nathan-iel-vm`.  
+  - Validate integrity of HR artifacts (`HRConfig.json`, `PromotionCandidates.csv`) and restore from known-good backups if tampering is confirmed (Flags 7–8, 13).  
+- **Detection & monitoring (aligned to observed behaviors)**
+  - Alert on `Set-MpPreference` calls that disable protections and on changes to Defender-related registry values (Flags 5–6).  
+  - Monitor for creation/changes of `HKCU/HKLM\Software\Microsoft\Windows\CurrentVersion\Run*` entries invoking `.ps1` scripts (Flag 11).  
+  - Detect `wevtutil.exe cl` (clear log) executions and treat as high-priority review events (Flag 14).  
+  - Track access patterns to HR directories/files and alert on unusual modification or repeated access to personnel records (Flags 7–8, 12–13).  
+  - Monitor outbound connections to newly observed external domains/TLDs and anomalous ICMP to internet IPs (Flags 9–10).  
+- **Hardening**
+  - Enforce Defender Tamper Protection and restrict the ability for local users to modify AV settings (Flags 5–6).  
+  - Centralize and protect event logs to prevent local clearing from destroying investigative data (Flags 14–15).  
+  - Limit administrative group membership and interactive logons on HR-sensitive hosts (Flags 3–4).  
+- **Insider-risk and HR follow-up**
+  - Review access associated with the repeatedly accessed personnel record (`Carlos Tanaka`) and audit the promotion process for manipulation (Flags 12–13).
