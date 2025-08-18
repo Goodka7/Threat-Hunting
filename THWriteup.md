@@ -62,10 +62,9 @@ HR related stuffs or tools were recently touched, investigate any dropped script
 **Identify the first machine to look at:**
 `nathan-iel-vm`
 
-Note: Used "Custom time range for ALL KQL: 2025-07-17 to 2025-07-20"
+Note: Used "Custom time range for ALL KQL queries: 2025-07-17 to 2025-07-20"
 
-**KQL Query Used:**
-```
+KQL```
 DeviceFileEvents
 | where FileName contains "HR"
 ```
