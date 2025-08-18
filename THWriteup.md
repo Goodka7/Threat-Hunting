@@ -1,4 +1,3 @@
-<img width="711" height="583" alt="image" src="https://github.com/user-attachments/assets/a5c33714-b130-4558-9287-e7cc28cf32db" />
 # Threat Hunt Report: **HR Data Exfil**
 
 Analyst: `James Harrington`
