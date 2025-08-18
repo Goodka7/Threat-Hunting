@@ -63,6 +63,7 @@ HR related stuffs or tools were recently touched, investigate any dropped script
 `nathan-iel-vm`
 
 Note: Used "Custom time range for ALL KQL: 2025-07-17 to 2025-07-20"
+
 **KQL Query Used:**
 ```
 DeviceFileEvents
