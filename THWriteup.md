@@ -62,7 +62,7 @@ HR related stuffs or tools were recently touched, investigate any dropped script
 **Identify the first machine to look at:**
 `nathan-iel-vm`
 
-Note: Used "Custom time range for ALL KQL queries: 2025-07-17 to 2025-07-20"
+Note: Used "Custom time range" for ALL KQL queries: 2025-07-17 to 2025-07-20
 
 **KQL Query:**
 ```KQL
@@ -90,7 +90,7 @@ Who?
 **Provide the creation time of the first suspicious process that occurred:**
 `2025-07-19T02:07:43.9041721Z`
 
-**KQL Query Used:**
+**KQL Query:**
 ```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
@@ -113,14 +113,17 @@ PowerShell queries that enumerates local identities.
 After knowing their own access level, intruders start scanning the local account landscape to plan privilege escalation or impersonation down the line.
 
 **Identify the associated SHA256 value of this particular instance:**
-9785001b0dcf755eddb8af294a373c0b87b2498660f724e76c4d53f9c217c7a3
+`9785001b0dcf755eddb8af294a373c0b87b2498660f724e76c4d53f9c217c7a3`
 
-**KQL Query Used**
-```DeviceProcessEvents
+**KQL Query:**
+```KQL
+DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "who"
 ```
 -Realted to the query above so didn't need to do anything extra.
+
+<img width="1110" height="659" alt="image" src="https://github.com/user-attachments/assets/0cae1d98-f1fd-4f93-a168-31f142c4eb12" />
 
 ### 🚩 Flag 3 - Privileged Group Assessment
 
@@ -134,16 +137,17 @@ A method used to check for high-privilege users.
 Knowledge of who has admin rights opens doors for impersonation and deeper lateral movement.
 
 **What is the value of the command?**
-"powershell.exe" net localgroup Administrators
+`"powershell.exe" net localgroup Administrators`
 
-
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "powershell"
 ```
 -Query was made so I could observe the baseline powershell commands being ran, after scrolling down for a few seconds I saw the obvious command.
+
+<img width="1229" height="602" alt="image" src="https://github.com/user-attachments/assets/d980e263-3dc5-439b-8e91-c836054f3a8f" />
 
 ### 🚩 Flag 4 – Active Session Discovery
 
@@ -157,10 +161,11 @@ Might be session-enumeration commands.
 By riding along existing sessions, attackers can blend in and avoid spawning suspicious user contexts.
 
 **Provide the value of the program tied to this activity:**
-qwinsta.exe
+`qwinsta.exe`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "qwinsta"
