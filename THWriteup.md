@@ -64,7 +64,7 @@ HR related stuffs or tools were recently touched, investigate any dropped script
 
 Note: Used "Custom time range for ALL KQL queries: 2025-07-17 to 2025-07-20"
 
-KQL Query:
+**KQL Query:**
 ```KQL
 DeviceFileEvents
 | where FileName contains "HR"
@@ -85,13 +85,14 @@ Initial signs of PowerShell being used in a way that deviates from baseline usag
 Understanding where it all began helps chart every move that follows. Look for PowerShell actions that started the chain.
 
 **Hint:**
-1. Who?
+Who?
 
 **Provide the creation time of the first suspicious process that occurred:**
-2025-07-19T02:07:43.9041721Z
+`2025-07-19T02:07:43.9041721Z`
 
 **KQL Query Used:**
-```DeviceProcessEvents
+```KQL
+DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "who"
 ```
