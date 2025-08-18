@@ -106,6 +106,9 @@ Understanding where it all began helps chart every move that follows. Look for P
 ```
 -I used this query because of the hint: Who, it turned out to have all the information I needed.
 
+<img width="1135" height="484" alt="image" src="https://github.com/user-attachments/assets/88008bf4-d60a-48fa-a17c-777bef27f5ab" />
+<img width="1046" height="309" alt="image" src="https://github.com/user-attachments/assets/156fd043-f7fb-4544-be8a-64a0f8590350" />
+
 ### 🚩 Flag 2 – Local Account Assessment
 
 **Objective:**
