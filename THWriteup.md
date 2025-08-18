@@ -1,4 +1,4 @@
-
+<img width="711" height="583" alt="image" src="https://github.com/user-attachments/assets/a5c33714-b130-4558-9287-e7cc28cf32db" />
 # Threat Hunt Report: **HR Data Exfil**
 
 Analyst: `James Harrington`
@@ -185,16 +185,17 @@ Can be PowerShell related activity.
 Disabling protection under the guise of internal tooling is a hallmark of insider abuse.
 
 **What was the command value used to execute?**
- "powershell.exe" -Command "Set-MpPreference -DisableRealtimeMonitoring $true"
+ `"powershell.exe" -Command "Set-MpPreference -DisableRealtimeMonitoring $true"`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "powershell"
 ```
 -Third time using this same query, but it has a lot of good info if you just follow the timeline.
 
+<img width="972" height="606" alt="image" src="https://github.com/user-attachments/assets/e02d9d9b-c42a-4efd-8eb6-af91dc6a5442" />
 
 ### 🚩 Flag 6 – Defender Policy Modification
 
@@ -208,16 +209,18 @@ Policy or configuration changes that affect baseline defensive posture.
 Turning down the shield is always a red flag.
 
 **Provide the name of the registry value:**
-DisableAntiSpyware
+`DisableAntiSpyware`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceRegistryEvents
 | where DeviceName == "nathan-iel-vm"
 | where RegistryValueName != ""
 | order by Timestamp asc
 ```
--Given the clues, I knew it was related to Registry events, the "thought" was a big clue that it had to do with AntiVirus or Microsoft Defender.
+-Given the context clues, I knew it was related to Registry events).
+
+<img width="1465" height="797" alt="image" src="https://github.com/user-attachments/assets/e982abd1-9c4d-42a9-a2ad-ff74b5394c64" />
 
 ### 🚩 Flag 7 – Access to Credential-Rich Memory Space
 
@@ -231,10 +234,11 @@ Uncommon use of system utilities interacting with protected memory.
 The path to credentials often runs through memory — if you can reach it, you own it.
 
 **What was the HR related file name associated with this tactic?**
-HRConfig.json
+`HRConfig.json`
 
-KQL Query Used:
-```
+KQL Query:
+
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where FileName in ("procdump.exe", "taskmgr.exe", "rundll32.exe")
@@ -243,6 +247,7 @@ DeviceProcessEvents
 ```
 -Query was made to look for common filenames that would be included for memory dumps.
 
+<img width="1294" height="516" alt="image" src="https://github.com/user-attachments/assets/b2dc30a8-c9da-4b92-ac08-e46ca59321a1" />
 
 ### 🚩 Flag 8 – File Inspection of Dumped Artifacts
 
@@ -259,15 +264,17 @@ Dumping isn’t the end — verification is essential.
 Utilize previous findings
 
 **Identified Artifact:**
-"notepad.exe" C:\HRTools\HRConfig.json
+`"notepad.exe" C:\HRTools\HRConfig.json`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "HRConfig.json"
 ```
 -Using the hint, was pretty easy to find.
+
+<img width="1309" height="515" alt="image" src="https://github.com/user-attachments/assets/cdc75a44-d481-43e9-be50-89e477789528" />
 
 ### 🚩 Flag 9 – Outbound Communication Test
 
@@ -281,10 +288,10 @@ Lightweight outbound requests to uncommon destinations.
 Before exfiltration, there’s always a ping — even if it’s disguised as routine.
 
 **What was the TLD of the unusual outbound connection?**
-.net
+`.net`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceNetworkEvents
 | where DeviceName == "nathan-iel-vm"
 | where RemoteIPType == "Public" // external IPs
@@ -292,6 +299,8 @@ DeviceNetworkEvents
 | project Timestamp, RemoteUrl
 | order by Timestamp asc
 ```
+
+<img width="1185" height="483" alt="image" src="https://github.com/user-attachments/assets/4d96d37d-abb5-4e26-b351-cbcba1e83eb7" />
 
 ### 🚩 Flag 10 – Covert Data Transfer
 
@@ -305,10 +314,10 @@ Activity that hints at transformation or movement of local HR data.
 Staging the data is quiet. Sending it out makes noise — if you know where to listen.
 
 **Identify the ping of the last unusual outbound connection attempt:**
-52.54.13.125
+`52.54.13.125`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceNetworkEvents
 | where DeviceName == "nathan-iel-vm"
 | where RemoteIPType == "Public" // external IPs
@@ -316,7 +325,9 @@ DeviceNetworkEvents
 | project Timestamp, RemoteUrl, RemoteIP
 | order by Timestamp asc
 ```
--Added RemoteIP to last query so I could read the IPs assosicated with the suspect .net TLD.
+-Added project RemoteIP to previous query so I could read the IPs assosicated with the suspect .net TLD.
+
+<img width="1012" height="521" alt="image" src="https://github.com/user-attachments/assets/b1e208ef-5560-4337-a3e7-82b7a14dbd34" />
 
 ### 🚩 Flag 11 – Persistence via Local Scripting
 
@@ -330,10 +341,10 @@ Use of startup configurations tied to non-standard executables.
 A quiet script in the right location can make a backdoor look like a business tool.
 
 **Provide the file name tied to the registry value:**
-OnboardTracker.ps1
+`OnboardTracker.ps1`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceRegistryEvents
 | where DeviceName == "nathan-iel-vm"
 | where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run"
@@ -341,6 +352,8 @@ DeviceRegistryEvents
 | project Timestamp, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
 | order by Timestamp asc
 ```
+
+<img width="1326" height="405" alt="image" src="https://github.com/user-attachments/assets/f85d60d9-1d38-4859-bac3-ce9e9bcf6eec" />
 
 ### 🚩 Flag 12 – Targeted File Reuse / Access
 
@@ -357,16 +370,18 @@ The file that draws the most interest often holds the motive.
 Abcd Efgh
 
 **What is the name of the personnel file that was repeatedly accessed?**
-Carlos Tanaka
+`Carlos Tanaka`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceFileEvents
 | where DeviceName == "nathan-iel-vm"
 | summarize AccessCount = count() by FileName, FolderPath
 | order by AccessCount desc
 ```
--To be honest this one was kind of out there, I had seen a file before when I was running queries that had someone's name attached, so I just scrolled down and saw a name (format was the hint) and it happened to be correct.
+-Based on the format and the context of it being a personnel file, this file name stuck out.
+
+<img width="891" height="450" alt="image" src="https://github.com/user-attachments/assets/0728afb3-626f-4f11-bb27-ba23cfa6493a" />
 
 ### 🚩 Flag 13 – Candidate List Manipulation
 
@@ -380,10 +395,10 @@ Unexpected modifications to structured HR records.
 Whether tampering or staging — file changes precede extraction.
 
 **Identify the first instance where the file in question is modified and drop the corresponding SHA1 value of it:**
-65a5195e9a36b6ce73fdb40d744e0a97f0aa1d34
+`65a5195e9a36b6ce73fdb40d744e0a97f0aa1d34`
 
-**KQL Queries Used:**
-```
+**KQL Queries:**
+```KQL
 DeviceFileEvents
 | where DeviceName == "nathan-iel-vm"
 | where ActionType in ("FileModified", "FileCreated", "FileDeleted")
@@ -395,6 +410,8 @@ DeviceFileEvents
 | project SHA1
 ```
 -Added to the query once I saw the appropriate file name, then projected SHA values so I could get the correct one.
+
+<img width="711" height="583" alt="image" src="https://github.com/user-attachments/assets/8d0423d3-9d00-4996-a954-042725336be8" />
 
 ### 🚩 Flag 14 – Audit Trail Disruption
 
@@ -411,10 +428,10 @@ The first thing to go when a crime’s committed? The cameras.
 "ab"
 
 **Identify when the first attempt at clearing the trail was done:**
-2025-07-19T05:38:55.6800388Z
+`2025-07-19T05:38:55.6800388Z`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceProcessEvents
 | where DeviceName == "nathan-iel-vm"
 | where ProcessCommandLine contains "wevtutil.exe"
@@ -422,6 +439,8 @@ DeviceProcessEvents
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 ```
 - wevtutil.exe is regularly leveraged to delete logs, so all I had to do was look for the first "wevtutil.exe" cl (log).
+
+<img width="945" height="750" alt="image" src="https://github.com/user-attachments/assets/5d6908fc-10de-40b9-8c8d-6aa1dd1e3320" />
 
 ### 🚩Flag 15 – Final Cleanup and Exit Prep
 
@@ -432,19 +451,19 @@ Capture the combination of anti-forensics actions signaling attacker exit.
 Artifact deletions, security tool misconfigurations, and trace removals.
 
 **Thought:**
-Every digital intruder knows — clean up before you leave or you’re already caugh
-
+Every digital intruder knows — clean up before you leave or you’re already caught
 
 **Identify when the last associated attempt occurred:**
-2025-07-19T06:18:38.6841044Z
+`2025-07-19T06:18:38.6841044Z`
 
-**KQL Query Used:**
-```
+**KQL Query:**
+```KQL
 DeviceFileEvents
 | where DeviceName == "nathan-iel-vm"
 | where InitiatingProcessAccountName == "nathan13l_vm"
 | order by Timestamp desc
 ```
+
 ## MITRE ATT&CK Technique Mapping (Evidence-Only)
 
 | Flag | MITRE Technique                               | ID         | Description |
