@@ -64,7 +64,7 @@ HR related stuffs or tools were recently touched, investigate any dropped script
 
 Note: Used "Custom time range for ALL KQL queries: 2025-07-17 to 2025-07-20"
 
-KQL```
+```KQL
 DeviceFileEvents
 | where FileName contains "HR"
 ```
