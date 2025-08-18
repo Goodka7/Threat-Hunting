@@ -1,13 +1,13 @@
 
 # Threat Hunt Report: **HR Data Exfil**
 
-Analyst: James Harrington
+Analyst: `James Harrington`
 
-Date Completed: 2025-08-18
+Date Completed: `2025-08-18`
 
-Environment Investigated: nathan-iel-vm
+Environment Investigated: `nathan-iel-vm`
 
-Timeframe: July 17 – 20, 2025
+Timeframe: `July 17 – 20, 2025`
 
 ##  Scenario
 
@@ -60,7 +60,7 @@ Before you officially begin the flags, you must first determine where to start h
 HR related stuffs or tools were recently touched, investigate any dropped scripts or configs over the mid-July weekends
 
 **Identify the first machine to look at:**
-nathan-iel-vm
+`nathan-iel-vm`
 
 Note: Used "Custom time range for ALL KQL: 2025-07-17 to 2025-07-20"
 **KQL Query Used:**
