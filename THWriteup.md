@@ -80,6 +80,8 @@ DeviceFileEvents
 ```
 -Query made based on context clues, found the VM name quickly and it was correct.
 
+<img width="1090" height="594" alt="image" src="https://github.com/user-attachments/assets/71e813e0-27e8-4737-b31c-ea9b82621b2d" />
+
 ### 🚩 Flag 1 – Initial PowerShell Execution
 
 **Objective:**
