@@ -57,22 +57,12 @@ Between July 17–20, 2025, insider activity was identified on nathan-iel-vm tha
 Before you officially begin the flags, you must first determine where to start hunting. Identify where to start hunting with the following: 
 
 **Intel Given:**
-- HR related stuffs or tools were recently touched, investigate any dropped scripts or configs over the mid-July weekends
+HR related stuffs or tools were recently touched, investigate any dropped scripts or configs over the mid-July weekends
 
-**Identified System:**
+**Identify the first machine to look at:**
 nathan-iel-vm
 
-**Reasoning:**
-Using the provided telemetry, nathan-iel-vm showed access to files and folders with HR designation:
-
-/HRTools/
-/HR_Storm/
-HRTools.lnk
-HRConfig.json
-
-This aligns with the operational timeline in question.
-
-Note: Used "Custom time range: 2025-07-17 to 2025-07-20"
+Note: Used "Custom time range for ALL KQL: 2025-07-17 to 2025-07-20"
 **KQL Query Used:**
 ```
 DeviceFileEvents
