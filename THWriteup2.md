@@ -16,7 +16,11 @@ Suspicious activity has been detected on one of our cloud virtual machines. As a
 
 ## Executive Summary
 
-Between September 17–21, 2025, insider activity was identified on nathan-iel-vm that targeted HR data and audit controls. The actor leveraged PowerShell and native Windows tools to escalate privileges, disable endpoint protections, establish persistence, and exfiltrate sensitive HR configuration files. Tampering with promotion candidate records and repeated access to the personnel file of Carlos Tanaka strongly suggest a fraudulent motive tied to internal promotion processes. Multiple anti-forensic attempts were observed, including event log clearing and AV policy manipulation, indicating deliberate stealth. Data exfiltration occurred through outbound connections to a .net domain (52.54.13.125). The activity represents a successful insider-driven HR data manipulation and exfiltration event with material impact on personnel processes and data integrity.
+Between September 17–21, 2025, an attacker compromised the Windows VM within the slflarewinsysmo environment by brute-forcing RDP access from external IP 159.26.106.84 and successfully logging in with the slflare account. Once inside, the adversary executed a malicious binary (msupdate.exe) via PowerShell with execution bypass, and established persistence by creating a scheduled task (MicrosoftUpdateSync). To evade detection, Microsoft Defender settings were modified to exclude C:\Windows\Temp from scanning.
+
+Following persistence, the attacker conducted system discovery using built-in commands (systeminfo), collected local data, and staged it for exfiltration in an archive file (backup_sync.zip). Outbound communications were established with external infrastructure at 185.92.220.87, with attempts to exfiltrate the staged archive over HTTP to port 8081. Multiple anti-forensic behaviors, including event log clearing, were also observed.
+
+The intrusion demonstrates a complete intrusion kill chain on a single host, from brute-force initial access through execution, persistence, defense evasion, discovery, collection, C2 communication, and exfiltration attempts. No evidence of lateral movement was observed.
 
 ---
 
@@ -24,22 +28,17 @@ Between September 17–21, 2025, insider activity was identified on nathan-iel-v
 
 | Flag # | Objective | Value |
 |--------|-----------|-------|
-| **Start** | Identify the first machine | `nathan-iel-vm` |
-| **1** | Creation time of the first suspicious process | `2025-07-19T02:07:43.9041721Z` |
-| **2** | SHA256 value of this particular instance | `9785001b0dcf755eddb8af294a373c0b87b2498660f724e76c4d53f9c217c7a3` |
-| **3** | What is the value of the command | `"powershell.exe" net localgroup Administrators` |
-| **4** | Value of the program tied to this activity | `qwinsta.exe` |
-| **5** | Value used to execute command | `"powershell.exe" -Command "Set-MpPreference -DisableRealtimeMonitoring $true"` |
-| **6** | Provide the name of the registry value | `DisableAntiSpyware`
-| **7** | HR related file name associated with this tactic | `HRConfig.json` |
-| **8** | Value of the associated command | `"notepad.exe" C:\HRTools\HRConfig.json` |
-| **9** | TLD of the unusual outbound connection | `.net` |
-| **10** | Ping of the last unusual outbound connection | `52.54.13.125` |
-| **11** | File name tied to the registry value | `OnboardTracker.ps1` |
-| **12** | Name of the personnel that was repeatedly accessed | `Carlos Tanaka` |
-| **13** | SHA1 value of first instance where the file in question is modified | `65a5195e9a36b6ce73fdb40d744e0a97f0aa1d34` |
-| **14** | Identify when the first attempt at clearing the trail | `2025-07-19T05:38:55.6800388Z` |
-| **15** | Identify when the last associated attempt occurred | `2025-07-19T06:18:38.6841044Z` |
+| **Start** | Identify the environment investigated | `slflarewinsysmo` |
+| **1** | Earliest external IP successfully logged in via RDP | `159.26.106.84` |
+| **2** | Compromised account used for login | `slflare` |
+| **3** | Name of the executed binary | `msupdate.exe` |
+| **4** | Full command line used to execute the binary | `"msupdate.exe" -ExecutionPolicy Bypass -File C:\Users\Public\update_check.ps1"` |
+| **5** | Name of persistence mechanism created | `MicrosoftUpdateSync` |
+| **6** | Defender setting/folder path modified | `C:\Windows\Temp` |
+| **7** | Earliest discovery command executed | `"cmd.exe" /c systeminfo"` |
+| **8** | Archive file created by attacker | `backup_sync.zip` |
+| **9** | C2 connection destination | `185.92.220.87` |
+| **10** | IP and port used in exfiltration attempt | `185.92.220.87:8081` |
 
 ---
 ## Stage 1 - Initial Access
@@ -297,55 +296,85 @@ Before exfiltration, there’s always a ping — even if it’s disguised as rou
 
 | Flag | MITRE Technique                               | ID         | Description |
 |------|-----------------------------------------------|------------|-------------|
-| 1    | PowerShell                                    | T1059.001  | Suspicious PowerShell execution (`whoami` discovery command). |
-| 2    | System Owner/User Discovery                   | T1033      | Account/user context enumeration (`whoami` activity). |
-| 3    | Permission Groups Discovery: Local Groups     | T1069.001  | Checked elevated accounts with `net localgroup Administrators`. |
-| 4    | System Owner/User Discovery                   | T1033      | Session enumeration using `qwinsta.exe` to reveal logged-in users. |
-| 5    | Impair Defenses: Disable or Modify Tools      | T1562.001  | Disabled Defender real-time monitoring via PowerShell (`Set-MpPreference`). |
-| 6    | Modify Registry                               | T1112      | Registry change (`DisableAntiSpyware`) to weaken endpoint defenses. |
-| 7    | Data from Local System                        | T1005      | Accessed HR-related file `HRConfig.json`. |
-| 8    | Data from Local System                        | T1005      | Opened `C:\HRTools\HRConfig.json` with `notepad.exe` for inspection. |
-| 9    | Application Layer Protocol: Web               | T1071.001  | Outbound connection to unusual `.net` domain. |
-| 10   | Registry Run Keys/Startup Folder              | T1547.001  | Persistence via Run key referencing `OnboardTracker.ps1`. |
-| 11   | Data from Local System                        | T1005      | Repeated access to personnel file `Carlos Tanaka`. |
-| 12   | Data Manipulation: Stored Data                | T1565.001  | Modified `PromotionCandidates.csv` (SHA1 recorded). |
-| 13   | Clear Windows Event Logs                      | T1070.001  | Used `wevtutil.exe cl` to clear Windows event logs. |
-| 14   | Indicator Removal on Host                     | T1070      | Final cleanup attempt removing artifacts and traces. |
+| 1    | Brute Force: Password Guessing                | T1110.001  | Multiple failed RDP attempts followed by a successful login from external IP `159.26.106.84`. |
+| 2    | Valid Accounts                                | T1078      | Attacker used compromised account `slflare` to log in via RDP. |
+| 3    | User Execution: Malicious File                | T1204.002  | Executed malicious binary `msupdate.exe` on the host. |
+| 4    | Command and Scripting Interpreter: PowerShell | T1059.001  | Launched binary with PowerShell execution bypass (`update_check.ps1`). |
+| 5    | Scheduled Task/Job: Scheduled Task            | T1053.005  | Created scheduled task `MicrosoftUpdateSync` for persistence. |
+| 6    | Impair Defenses: Disable or Modify Defender   | T1562.001  | Added folder exclusion `C:\Windows\Temp` to bypass Microsoft Defender scans. |
+| 7    | System Information Discovery                  | T1082      | Ran `systeminfo` to gather host environment details. |
+| 8    | Archive Collected Data: Local Archiving       | T1560.001  | Created archive file `backup_sync.zip` to stage data for exfiltration. |
+| 9    | Application Layer Protocol: Web Protocols     | T1071.001  | Established C2 connection with external host `185.92.220.87`. |
+| 10   | Exfiltration Over Unencrypted Protocol        | T1048.003  | Attempted to exfiltrate archive file to `185.92.220.87:8081` over HTTP. |
 
 ---
 
 # Lessons Learned
 
-- **Native tooling over malware.** The actor relied on built-in utilities for discovery and operational cover: PowerShell (“whoami” discovery) (Flag 1–2), local admin group enumeration via `net localgroup Administrators` (Flag 3), and session enumeration with `qwinsta.exe` (Flag 4).  
-- **Deliberate weakening of endpoint defenses.** Defender protections were reduced using `Set-MpPreference -DisableRealtimeMonitoring $true` (Flag 5) and the `DisableAntiSpyware` registry value (Flag 6).  
-- **Persistence via Run key.** A PowerShell script (`OnboardTracker.ps1`) was configured for autorun through a Run-key entry (Flag 11).  
-- **Targeted HR data access and manipulation.** Sensitive HR artifacts were accessed and inspected (`HRConfig.json`, opened with `notepad.exe`) (Flags 7–8), a specific personnel record was repeatedly accessed (`Carlos Tanaka`) (Flag 12), and promotion data was modified (`PromotionCandidates.csv`, SHA1 captured) (Flag 13).  
-- **Anti-forensics to impair investigation.** Event logs were cleared using `wevtutil.exe` (first and last attempts recorded) (Flags 14–15).  
-- **External connectivity consistent with staging or testing.** Unusual outbound activity to a `.net` destination and ping to `52.54.13.125` were observed (Flags 9–10). Content transfer is **not** demonstrated by the provided evidence.  
-- **Scope (as evidenced).** All documented activity is on `nathan-iel-vm`; no lateral movement is evidenced in the flags provided.
 
+- **Initial Access through brute force is still effective.**  
+  The attacker gained entry by brute-forcing RDP (Flag 1), then leveraging a valid account (`slflare`) to establish remote access (Flag 2). This highlights the importance of enforcing account lockouts, MFA, and monitoring RDP activity.
+
+- **Malicious binaries combined with PowerShell abuse.**  
+  The attacker executed `msupdate.exe` (Flag 3) with an execution bypass PowerShell command (Flag 4). This shows how adversaries blend native interpreters with simple droppers to avoid detection.
+
+- **Persistence established with scheduled tasks.**  
+  The scheduled task `MicrosoftUpdateSync` (Flag 5) ensured recurring access, demonstrating how adversaries use Windows Task Scheduler for stealthy persistence.
+
+- **Defender protections were weakened.**  
+  By excluding `C:\Windows\Temp` from scanning (Flag 6), the attacker created a safe zone for malicious tools. This reflects a common defense evasion tactic that bypasses endpoint controls without disabling them entirely.
+
+- **Discovery with native tools.**  
+  Running `systeminfo` (Flag 7) shows the attacker used living-off-the-land commands to enumerate host details before taking further action.
+
+- **Data staging before exfiltration.**  
+  Creation of `backup_sync.zip` (Flag 8) indicates a deliberate step to consolidate files, consistent with preparing sensitive data for transfer.
+
+- **Active command-and-control communications.**  
+  Outbound traffic to `185.92.220.87` (Flag 9) demonstrates beaconing and C2 control, further reinforced by the exfiltration attempt (Flag 10).
+
+- **Exfiltration via unencrypted protocol.**  
+  Attempting to send data over HTTP to `185.92.220.87:8081` (Flag 10) shows adversaries may not always use encryption, and network-level monitoring can detect such activity.
+
+- **No lateral movement observed.**  
+  All malicious activity was contained to a single VM, reducing scope but reinforcing the importance of segmentation and early detection.
+  
 ---
 
 ## Recommendations for Remediation
 
-- **Containment and scoping**
-  - Isolate `nathan-iel-vm`.  
-  - Block and monitor the external IP `52.54.13.125` and investigate associated `.net` destinations observed (Flags 9–10).  
-- **Eradication**
-  - Remove the Run-key persistence referencing `OnboardTracker.ps1`; delete or quarantine the script (Flag 11).  
-  - Restore Defender settings, re-enable real-time protection, and verify the `DisableAntiSpyware` value is not set (Flags 5–6).  
-- **Recovery and validation**
-  - Perform a full AV/EDR scan on `nathan-iel-vm`.  
-  - Validate integrity of HR artifacts (`HRConfig.json`, `PromotionCandidates.csv`) and restore from known-good backups if tampering is confirmed (Flags 7–8, 13).  
-- **Detection & monitoring (aligned to observed behaviors)**
-  - Alert on `Set-MpPreference` calls that disable protections and on changes to Defender-related registry values (Flags 5–6).  
-  - Monitor for creation/changes of `HKCU/HKLM\Software\Microsoft\Windows\CurrentVersion\Run*` entries invoking `.ps1` scripts (Flag 11).  
-  - Detect `wevtutil.exe cl` (clear log) executions and treat as high-priority review events (Flag 14).  
-  - Track access patterns to HR directories/files and alert on unusual modification or repeated access to personnel records (Flags 7–8, 12–13).  
-  - Monitor outbound connections to newly observed external domains/TLDs and anomalous ICMP to internet IPs (Flags 9–10).  
-- **Hardening**
-  - Enforce Defender Tamper Protection and restrict the ability for local users to modify AV settings (Flags 5–6).  
-  - Centralize and protect event logs to prevent local clearing from destroying investigative data (Flags 14–15).  
-  - Limit administrative group membership and interactive logons on HR-sensitive hosts (Flags 3–4).  
-- **Insider-risk and HR follow-up**
-  - Review access associated with the repeatedly accessed personnel record (`Carlos Tanaka`) and audit the promotion process for manipulation (Flags 12–13).
+### Containment and Scoping
+- Immediately isolate the compromised VM (`slflarewinsysmo`) from the network.  
+- Block and monitor traffic to external IP `185.92.220.87` and port `8081`.  
+- Review other hosts in the environment for similar brute-force login attempts or scheduled task creation.
+
+### Eradication
+- Remove the malicious binary (`msupdate.exe`) and associated script (`update_check.ps1`).  
+- Delete the scheduled task `MicrosoftUpdateSync` (Flag 5).  
+- Remove the Defender exclusion on `C:\Windows\Temp` and restore default AV policies (Flag 6).  
+
+### Recovery and Validation
+- Run a full endpoint scan across the environment to ensure no secondary persistence mechanisms exist.  
+- Validate whether any sensitive data was successfully exfiltrated by reviewing network logs around the time of the attempted transfer (Flags 8–10).  
+- Rebuild the affected VM from a clean image if compromise scope cannot be fully verified.  
+
+### Detection and Monitoring
+- Implement alerting for repeated failed RDP logins followed by success from external IPs (Flags 1–2).  
+- Detect execution of PowerShell with `-ExecutionPolicy Bypass` and suspicious script file paths (Flag 4).  
+- Monitor creation of scheduled tasks, especially those mimicking system updates (Flag 5).  
+- Alert on Defender configuration changes such as folder exclusions (Flag 6).  
+- Track native discovery commands (`systeminfo`, `whoami`, `ipconfig`) executed in unusual contexts (Flag 7).  
+- Watch for creation of archive files in Temp, Public, or unusual directories (Flag 8).  
+- Flag outbound HTTP/S traffic to unknown IPs and high-risk ports like `8081` (Flags 9–10).
+
+### Hardening
+- Enforce MFA on all RDP logins and restrict access to trusted IP ranges.  
+- Apply account lockout policies to prevent brute-force attacks.  
+- Enable Defender Tamper Protection to prevent unauthorized policy changes.  
+- Centralize logging (e.g., via SIEM) to prevent local log tampering from impeding investigations.  
+- Apply least privilege and limit administrative access on cloud VMs.
+
+### Strategic Improvements
+- Conduct user awareness training on credential hygiene to reduce password spraying/brute force success.  
+- Regularly review and audit remote access requirements, removing unused accounts.  
+- Incorporate simulated brute-force/red-team scenarios into detection engineering to validate readiness.
