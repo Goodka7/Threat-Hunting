@@ -42,22 +42,22 @@ No lateral movement was observed, but the coherence and sequencing strongly indi
 
 | Flag # | Objective | Value |
 |--------|-----------|-------|
-| **Start** | Identify the environment investigated | `gab-intern-vm` |
-| **1** | First CLI parameter used during suspicious execution | `-ExecutionPolicy` |
-| **2** | Name of staged tamper artifact | `DefenderTamperArtifact.lnk` |
-| **3** | Clipboard probe command |` "powershell.exe" -NoProfile -Sta -Command try { Get-Clipboard Out-Null} catch{}" ` |
-| **4** | Timestamp of last host recon | `2025-10-09T12:51:44.3425653Z` |
-| **5** | Second storage enumeration command | `"cmd.exe" /c wmic logicaldisk get name,freespace,size"` |
-| **6** | File name of parent process for network check | `RuntimeBroker.exe` |
+| **Start** | Identify the most suspicious machine based on the given conditions | `gab-intern-vm` |
+| **1** | What was the first CLI parameter name used during the execution of the suspicious program | `-ExecutionPolicy` |
+| **2** | What was the name of the file related to this exploit | `DefenderTamperArtifact.lnk` |
+| **3** | Provide the command value tied to this particular exploit |` "powershell.exe" -NoProfile -Sta -Command try { Get-Clipboard Out-Null} catch{}" ` |
+| **4** | Point out when the last recon attempt was | `2025-10-09T12:51:44.3425653Z` |
+| **5** | Provide the 2nd command tied to this activity | `"cmd.exe" /c wmic logicaldisk get name,freespace,size"` |
+| **6** | What is the unique ID of the initiating process | `RuntimeBroker.exe` |
 | **7** | Unique ID of initiating process | `2533274790397065` |
-| **8** | Process that shows runtime application inventory | `tasklist.exe` |
-| **9** | Timestamp of first privilege query | `2025-10-09T12:52:14.3135459Z` |
-| **10** | First outbound destination contacted | `www.msftconnecttest.com` |
-| **11** | Full path where staging archive was dropped | `C:\Users\Public\ReconArtifacts.zip` |
-| **12** | Last unusual outbound IP contacted | `100.29.147.161` |
-| **13** | Scheduled task name created for persistence | `SupportToolUpdater` |
-| **14** | Name of autorun registry value created | `RemoteAssistUpdater` |
-| **15** | Planted narrative artifact filename | `SupportChat_log.lnk` |
+| **8** | Provide the file name of the process that best demonstrates a runtime process enumeration event on the target host | `tasklist.exe` |
+| **9** | Identify the timestamp of the very first attempt | `2025-10-09T12:52:14.3135459Z` |
+| **10** | Which outbound destination was contacted first | `www.msftconnecttest.com` |
+| **11** | Provide the full folder path value where the artifact was first dropped into | `C:\Users\Public\ReconArtifacts.zip` |
+| **12** | Provide the IP of the last unusual outbound connection | `100.29.147.161` |
+| **13** | Provide the value of the task name down below | `SupportToolUpdater` |
+| **14** | What was the name of the registry value | `RemoteAssistUpdater` |
+| **15** | Identify the file name of the artifact left behind | `SupportChat_log.lnk` |
 
 ---
 
