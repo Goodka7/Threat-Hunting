@@ -380,43 +380,41 @@ A planted explanation is a classic misdirection. The sequence and context reveal
 
 # Lessons Learned
 
-# Lessons Learned
-
 **Initial execution was disguised as routine support activity.**  
-The earliest suspicious action — PowerShell execution using `-ExecutionPolicy` bypass (Flag 1) — demonstrates how easily malicious or dual-use tooling can be slipped into a support narrative. This highlights the need for stricter monitoring of script execution originating from user-facing directories like Downloads, especially when tied to unusual parameters or remote-assistance contexts.
+The earliest suspicious action — PowerShell execution using `-ExecutionPolicy` bypass demonstrates how easily malicious or dual-use tooling can be slipped into a support narrative. This highlights the need for stricter monitoring of script execution originating from user-facing directories like Downloads, especially when tied to unusual parameters or remote-assistance contexts.
 
 **Staged security tamper artifacts indicate narrative shaping, not actual defense evasion.**  
-The presence of `DefenderTamperArtifact.lnk` (Flag 2) shows that the operator attempted to *suggest* Defender manipulation without modifying any real configuration. This sort of planted evidence is an advanced misdirection technique and underscores the importance of verifying telemetry rather than relying on surface-level artifacts.
+The presence of `DefenderTamperArtifact.lnk` shows that the operator attempted to *suggest* Defender manipulation without modifying any real configuration. This sort of planted evidence is an advanced misdirection technique and underscores the importance of verifying telemetry rather than relying on surface-level artifacts.
 
 **Early reconnaissance focused on quick-win data sources.**  
-Clipboard probing (Flag 3) reveals opportunistic attempts to capture sensitive information with minimal effort. These checks often precede deeper recon and demonstrate why endpoint auditing of ephemeral data access must be taken seriously.
+Clipboard probing reveals opportunistic attempts to capture sensitive information with minimal effort. These checks often precede deeper recon and demonstrate why endpoint auditing of ephemeral data access must be taken seriously.
 
 **Host and environment discovery was systematic and sequential.**  
-The timestamped recon commands (Flag 4) illustrate a structured approach to understanding the system’s operating context. Gathering user, system, and environment details enables adversaries — or malicious “support” operators — to plan subsequent actions with precision.
+The timestamped recon commands (`2025-10-09T12:51:44.3425653Z`) illustrate a structured approach to understanding the system’s operating context. Gathering user, system, and environment details enables adversaries — or malicious “support” operators — to plan subsequent actions with precision.
 
 **The actor performed detailed storage mapping to identify data-rich locations.**  
-Commands such as `wmic logicaldisk get` (Flag 5) show that the operator enumerated storage surfaces to determine where valuable data might reside. This stage mirrors the preparation phase seen in targeted intrusions prior to staging or exfiltration.
+Commands such as `wmic logicaldisk get` show that the operator enumerated storage surfaces to determine where valuable data might reside. This stage mirrors the preparation phase seen in targeted intrusions prior to staging or exfiltration.
 
 **Connectivity and DNS checks confirmed outbound egress capability.**  
-Outbound validation through system processes like `RuntimeBroker.exe` (Flag 6) and test destinations such as `www.msftconnecttest.com` (Flag 10) indicates deliberate verification of network reachability. This behavior typically signals preparation for data movement or C2 communication.
+Outbound validation through system processes like `RuntimeBroker.exe` and test destinations such as `www.msftconnecttest.com` indicates deliberate verification of network reachability. This behavior typically signals preparation for data movement or C2 communication.
 
 **Session and privilege discovery informed the attacker’s operational posture.**  
-Identifying active sessions (Flag 7) and enumerating privileges (Flag 9) reflect an assessment of whether the current user context was safe for continued activity. Recon of this kind helps adversaries decide if escalation is needed or if they must wait for low-visibility windows.
+Identifying active sessions `2533274790397065` and enumerating privileges `2025-10-09T12:52:14.3135459Z` reflect an assessment of whether the current user context was safe for continued activity. Recon of this kind helps adversaries decide if escalation is needed or if they must wait for low-visibility windows.
 
 **Runtime process inventory enabled the actor to understand active defenses and workloads.**  
-Execution of tools like `tasklist.exe` (Flag 8) shows that the operator sought insight into running applications and potential interference points. This step corresponds to the situational awareness phase in many intrusion playbooks.
+Execution of tools like `tasklist.exe` shows that the operator sought insight into running applications and potential interference points. This step corresponds to the situational awareness phase in many intrusion playbooks.
 
 **Artifacts were consolidated for potential exfiltration.**  
-The creation of `ReconArtifacts.zip` (Flag 11) indicates deliberate staging of collected data into a centralized, easy-to-transfer package. Even if no full exfiltration succeeded, this behavior demonstrates clear intent and preparation.
+The creation of `ReconArtifacts.zip` indicates deliberate staging of collected data into a centralized, easy-to-transfer package. Even if no full exfiltration succeeded, this behavior demonstrates clear intent and preparation.
 
 **Outbound attempts to unusual external IPs were made, even if only simulated.**  
-Connections to hosts such as `100.29.147.161` (Flag 12) show tests of external accessibility and mock upload paths. Whether real or simulated, these attempts provide visibility into the operator’s intent to validate external communication routes.
+Connections to hosts such as `100.29.147.161` show tests of external accessibility and mock upload paths. Whether real or simulated, these attempts provide visibility into the operator’s intent to validate external communication routes.
 
 **Persistence mechanisms were intentionally layered.**  
-The scheduled task `SupportToolUpdater` (Flag 13) combined with the registry autorun value `RemoteAssistUpdater` (Flag 14) demonstrates redundant persistence. This mirrors attacker tradecraft meant to ensure re-entry even if one mechanism is discovered and removed.
+The scheduled task `SupportToolUpdater` combined with the registry autorun value `RemoteAssistUpdater` demonstrates redundant persistence. This mirrors attacker tradecraft meant to ensure re-entry even if one mechanism is discovered and removed.
 
 **A narrative artifact was deliberately planted to justify suspicious actions.**  
-The creation of `SupportChat_log.lnk` (Flag 15) highlights active misdirection. By providing a faux support log, the operator attempted to manufacture legitimacy for their activity, a behavior aligned with threat actors who anticipate post-incident review.
+The creation of `SupportChat_log.lnk` highlights active misdirection. By providing a faux support log, the operator attempted to manufacture legitimacy for their activity, a behavior aligned with threat actors who anticipate post-incident review.
 
 **No lateral movement was observed.**  
 All activity remained localized to a single endpoint — **gab-intern-vm** — suggesting either a controlled assessment or an early-stage intrusion. This containment, whether by design or by limitation, reinforces the importance of early detection and segmentation to prevent broader compromise.
@@ -454,4 +452,3 @@ All activity remained localized to a single endpoint — **gab-intern-vm** — s
 - Restrict execution from Downloads.
 - Enforce stricter logging and centralization.
 - Apply least-privilege principles to intern machines.
-
