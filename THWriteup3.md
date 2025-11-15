@@ -45,7 +45,7 @@ No lateral movement was observed, but the coherence and sequencing strongly indi
 | **Start** | Identify the environment investigated | `gab-intern-vm` |
 | **1** | First CLI parameter used during suspicious execution | `-ExecutionPolicy` |
 | **2** | Name of staged tamper artifact | `DefenderTamperArtifact.lnk` |
-| **3** | Clipboard probe command | `"powershell.exe" -NoProfile -Sta -Command "try { Get-Clipboard | Out-Null } catch { }"` |
+| **3** | Clipboard probe command |` "powershell.exe" -NoProfile -Sta -Command try { Get-Clipboard Out-Null} catch{}" ` |
 | **4** | Timestamp of last host recon | `2025-10-09T12:51:44.3425653Z` |
 | **5** | Second storage enumeration command | `"cmd.exe" /c wmic logicaldisk get name,freespace,size"` |
 | **6** | File name of parent process for network check | `RuntimeBroker.exe` |
