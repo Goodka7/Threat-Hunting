@@ -109,6 +109,15 @@ A planted or staged tamper indicator is a signal of intent — treat it as inten
 **What was the name of the file related to this exploit?**  
 `DefenderTamperArtifact.lnk`
 
+**KQL Query:**
+```KQL
+DeviceFileEvents
+| where DeviceName == "gab-intern-vm"
+| where FileName contains "tamper"
+```
+
+<img width="1342" height="621" alt="image" src="https://github.com/user-attachments/assets/622f667d-db68-4b59-930b-2d52a8f3a3b2" />
+
 **MITRE Technique:**  
 `🔸 T1562.001 – Impair Defenses`
 
@@ -129,6 +138,16 @@ Attackers look for low-effort wins first; these quick probes often precede broad
 
 **Provide the command value tied to this particular exploit:**  
 `"powershell.exe" -NoProfile -Sta -Command "try { Get-Clipboard | Out-Null } catch { }"`
+
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| where ProcessCommandLine contains "clip"
+| project ProcessCommandLine
+```
+
+<img width="1309" height="807" alt="image" src="https://github.com/user-attachments/assets/0fd2c14e-c9fc-4e7f-ab3e-bd04dcf51d7f" />
 
 **MITRE Technique:**  
 `🔸 T1115 – Clipboard Data`
@@ -151,6 +170,17 @@ Context-gathering shapes attacker decisions — who, what, and where to target n
 **Point out when the last recon attempt was:**  
 `2025-10-09T12:51:44.3425653Z`
 
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| where ProcessCommandLine contains "qwi"
+| project TimeGenerated, ProcessCommandLine, InitiatingProcessFileName
+| order by TimeGenerated asc
+```
+
+<img width="1215" height="626" alt="image" src="https://github.com/user-attachments/assets/16106d6f-3f20-43a5-ad55-fe04b0acfdde" />
+
 **MITRE Technique:**  
 `🔸 T1082 – System Information Discovery`
 
@@ -171,6 +201,15 @@ Mapping where data lives is a preparatory step for collection and staging.
 
 **Provide the 2nd command tied to this activity:**  
 `"cmd.exe" /c wmic logicaldisk get name,freespace,size"`
+
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| project TimeGenerated, ProcessCommandLine, InitiatingProcessParentFileName
+```
+
+<img width="1264" height="793" alt="image" src="https://github.com/user-attachments/assets/62f98aff-405c-454d-8cd5-14fa3b5ddb4a" />
 
 **MITRE Technique:**  
 `🔸 T1083 – File and Directory Discovery`
@@ -193,6 +232,10 @@ Confirming egress is a necessary precondition before any attempt to move data of
 **Provide the File Name of the initiating parent process:**  
 `RuntimeBroker.exe`
 
+**KQL Query: Same as above**
+
+<img width="1264" height="793" alt="image" src="https://github.com/user-attachments/assets/e1f89bfe-dc99-462b-8eb9-197b918a5a32" />
+
 **MITRE Technique:**  
 `🔸 T1016 – System Network Configuration Discovery`
 
@@ -213,6 +256,16 @@ Knowing which sessions are active helps an actor decide whether to act immediate
 
 **What is the unique ID of the initiating process:**  
 `2533274790397065`
+
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| where ProcessCommandLine has_any("qwinsta", "query session")
+| project ProcessCommandLine, InitiatingProcessUniqueId
+```
+
+<img width="944" height="692" alt="image" src="https://github.com/user-attachments/assets/2e8af9a4-b63b-4ee7-95fc-e3c6a6a28921" />
 
 **MITRE Technique:**  
 `🔸 T1033 – System Owner/User Discovery`
@@ -235,6 +288,16 @@ A process inventory shows what’s present and what to avoid or target for colle
 **Provide the file name of the process that best demonstrates a runtime process enumeration event on the target host:**  
 `tasklist.exe`
 
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| where ProcessCommandLine has_any("tasklist")
+| project ProcessCommandLine, FileName
+```
+
+<img width="911" height="677" alt="image" src="https://github.com/user-attachments/assets/b7e00022-2c6c-4d30-8f43-9c23675b998d" />
+
 **MITRE Technique:**  
 `🔸 T1057 – Process Discovery`
 
@@ -255,6 +318,16 @@ Privilege mapping informs whether the actor proceeds as a user or seeks elevatio
 
 **Identify the timestamp of the very first attempt:**  
 `2025-10-09T12:52:14.3135459Z`
+
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| where ProcessCommandLine contains "whoami"
+| project TimeGenerated, ProcessCommandLine
+```
+
+<img width="780" height="709" alt="image" src="https://github.com/user-attachments/assets/1539eaea-23fb-456c-83f2-ee11f22db2e4" />
 
 **MITRE Technique:**  
 `🔸 T1069 – Permission Group Discovery`
@@ -277,6 +350,14 @@ This step demonstrates both access and the potential to move meaningful data off
 **Which outbound destination was contacted first?**  
 `www.msftconnecttest.com`
 
+**KQL Query:**
+```KQL
+DeviceNetworkEvents
+| where DeviceName == "gab-intern-vm" and AdditionalFields contains "Out"
+```
+
+<img width="1196" height="781" alt="image" src="https://github.com/user-attachments/assets/c539ce72-e056-4582-98c7-fc6e73df1dc4" />
+
 **MITRE Technique:**  
 `🔸 T1041 – Exfiltration Over C2 Channel`
 
@@ -297,6 +378,16 @@ Staging is the practical step that simplifies exfiltration and should be correla
 
 **Full folder path:**  
 `C:\Users\Public\ReconArtifacts.zip`
+
+**KQL Query:**
+```KQL
+DeviceFileEvents
+| where DeviceName == "gab-intern-vm"
+| project FileName = Time, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessId
+order by FileTime asc
+```
+
+<img width="1157" height="703" alt="image" src="https://github.com/user-attachments/assets/26cb7844-cdca-483f-bce2-2e60f3a7e6a4" />
 
 **MITRE Technique:**  
 `🔸 T1074.001 – Local Data Staging`
@@ -319,6 +410,16 @@ Succeeded or not, attempt is still proof of intent — and it reveals egress pat
 **Provide the IP of the last unusual outbound connection:**  
 `100.29.147.161`
 
+**KQL Query:**
+```KQL
+DeviceNetworkEvents
+| where DeviceName == "gab-intern-vm"
+| where AdditionalFields contains "Out"
+```
+
+<img width="1312" height="746" alt="image" src="https://github.com/user-attachments/assets/36415ef4-eaef-4570-83ab-c2129de382a8" />
+
+
 **MITRE Technique:**  
 `🔸 T1048 – Exfiltration Over Unencrypted Channel`
 
@@ -339,6 +440,8 @@ Re-execution mechanisms are the actor’s way of surviving beyond a single sessi
 
 **Provide the value of the task name down below:**  
 `SupportToolUpdater`
+
+**KQL Query: Same query and screenshot as Flag 11**
 
 **MITRE Technique:**  
 `🔸 T1053.005 – Scheduled Task`
@@ -363,6 +466,8 @@ Redundant persistence increases resilience; find the fallback to prevent easy re
 **What was the name of the registry value:**  
 `RemoteAssistUpdater`
 
+**KQL Query: Query did not bring anything up even when searching directly for the name of the registry value**
+
 **MITRE Technique:**  
 `🔸 T1547.001 – Registry Run Keys / Startup Folder`
 
@@ -383,6 +488,18 @@ A planted explanation is a classic misdirection. The sequence and context reveal
 
 **Artifact name:**  
 `SupportChat_log.lnk`
+
+**KQL Query:**
+```KQL
+DeviceFileEvents
+| where DeviceName == "gab-intern-vm"
+| where FileName contains "SupportChat"
+| project FileName, FolderPath
+```
+
+**Note: This might seem a little 'strange' as the query was very specfic but because there are a lot of hints given during the hunt, I was already made away of "support" and "chat" and I had seen this log.txt file during my other queries so when I came to this flag I just looked into it directly and it turned out to be the actual flag.**
+
+<img width="1168" height="719" alt="image" src="https://github.com/user-attachments/assets/f673a39a-7d22-46c3-a705-2288e04a215c" />
 
 **MITRE Technique:**  
 `🔸 T1036 – Masquerading (Narrative / Cover Artifact)`
