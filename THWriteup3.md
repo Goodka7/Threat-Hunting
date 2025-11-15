@@ -77,6 +77,17 @@ Pinpointing the first unusual execution helps you anchor the timeline and follow
 **What was the first CLI parameter name used during the execution of the suspicious program?**  
 `-ExecutionPolicy`
 
+**KQL Query:**
+```KQL
+DeviceProcessEvents
+| where DeviceName == "gab-intern-vm"
+| project TimeGenerated, ProcessCommandLine
+```
+
+Note: Used "Custom time range" for ALL KQL queries: 2025-10-05 to 2025-10-15, then narrowed down once we found relevant events.
+
+<img width="1324" height="788" alt="image" src="https://github.com/user-attachments/assets/b546093b-5b70-4907-bbf3-4706b5c21ccc" />
+
 **MITRE Technique:**  
 `🔸 T1059.001 – Command and Scripting Interpreter: PowerShell`
 
