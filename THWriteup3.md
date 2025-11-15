@@ -1,4 +1,16 @@
-# Scenario
+# Threat Hunt Report: **Entry-Level Kill Chain**
+
+Analyst: `James Harrington`
+
+Date Completed: `2025-09-21`
+
+Environment Investigated: `slflarewinsysmo`
+
+Timeframe: `Sept 17 – 21, 2025`
+
+##  Scenario
+
+## Scenario
 
 A routine support request should have been a harmless session: quick reset, reassurance, and closure.  
 Instead, what unfolded resembled a covert assessment — a sequence of actions that probed, cataloged, and quietly documented the environment under the guise of “help.”
@@ -12,7 +24,7 @@ Your task: reconstruct the timeline, correlate artifacts, and determine what was
 
 ---
 
-# Executive Summary
+## Executive Summary
 
 Between **October 5–10, 2025**, a pattern of suspicious activity emerged across several machines in the department. Multiple endpoints were observed spawning executables from Downloads directories, sharing similar naming conventions. Analysis quickly identified **gab-intern-vm** as the earliest and most suspicious host, matching all observed indicators.
 
@@ -28,7 +40,7 @@ No lateral movement was observed, but the coherence and sequencing strongly indi
 
 ---
 
-# Completed Flags
+## Completed Flags
 
 | Flag # | Objective | Value |
 |--------|-----------|-------|
@@ -51,7 +63,7 @@ No lateral movement was observed, but the coherence and sequencing strongly indi
 
 ---
 
-# Stage 1 - Initial Access
+## Stage 1 - Initial Access
 
 ### 🚩 Flag 1 – Initial Execution Detection
 
