@@ -1,4 +1,4 @@
-# Threat Hunt Report: **Full Kill Chain Threat Hunt**
+# Threat Hunt Report: **Full Threat Hunt**
 
 Analyst: `James Harrington`
 
