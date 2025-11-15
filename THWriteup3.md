@@ -497,7 +497,7 @@ DeviceFileEvents
 | project FileName, FolderPath
 ```
 
-**Note: This might seem a little 'strange' as the query was very specfic but because there are a lot of hints given during the hunt, I was already made away of "support" and "chat" and I had seen this log.txt file during my other queries so when I came to this flag I just looked into it directly and it turned out to be the actual flag. IF I didnt have any suspicion... I would have queried "where FolderPath contains "recent" as this shows recently opened files/etc. **
+**Note: This might seem a little 'strange' as the query was very specfic but because there are a lot of hints given during the hunt, I was already made aware of "support" and "chat" and I had seen this log.txt file during my other queries so when I came to this flag I just looked into it directly and it turned out to be the actual flag. IF I didnt have any suspicion... I would have queried "where FolderPath contains "recent" as this shows recently opened files/etc. **
 
 <img width="1168" height="719" alt="image" src="https://github.com/user-attachments/assets/f673a39a-7d22-46c3-a705-2288e04a215c" />
 
