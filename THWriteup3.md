@@ -1,4 +1,4 @@
-# Threat Hunt Report: **Entry-Level Kill Chain**
+# Threat Hunt Report: **Full Kill Chain Threat Hunt**
 
 Analyst: `James Harrington`
 
