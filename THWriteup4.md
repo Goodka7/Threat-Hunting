@@ -1,4 +1,4 @@
-# Threat Hunt Report: **Full Threat Hunt**
+# Threat Hunt Report: **Azuki Import/Export – 梓貿易株式会社**
 
 Analyst: `James Harrington`
 
