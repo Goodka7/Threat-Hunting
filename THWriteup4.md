@@ -11,20 +11,6 @@ Timeframe:  `Nov 19 – 20, 2025`
 ## Scenario
 
 A six-year shipping contract, stable and predictable, was suddenly undercut by a competitor by exactly 3%.  
-Not roughly. Not approximately.  
-Exactly.
-
-Shortly afterward, Azuki Import/Export’s supplier pricing and contract data appeared on underground forums.
-
-That level of precision was not a market coincidence.  
-It was the fingerprint of a deliberate intrusion.
-
-Microsoft Defender for Endpoint telemetry from `AZUKI-SL`, the IT administrator workstation, revealed what happened behind the scenes. An external RDP session from an unfamiliar IP. A compromised internal account. Hidden staging directories created under system paths. Windows Defender exclusions carved out to shelter tools and payloads. Credential theft, archive creation, and data exfiltration over an encrypted channel to a cloud communication platform.
-
-This was not misconfiguration.  
-This was espionage.
-
-Your task: rebuild the attacker’s chain of actions, establish how the contract data was stolen, and identify what persistence and residual risk remains.
 
 ---
 
@@ -85,3 +71,11 @@ What to Hunt:
 Query logon events for interactive sessions from external sources during the incident timeframe.
 
 Flag value:  
+`88.97.178.12`
+
+KQL Query:
+```KQL
+DeviceLogonEvents
+| where DeviceName == "azuki-sl"
+| project TimeGenerated, AccountName, RemoteIP, LogonType, ActionType
+```
