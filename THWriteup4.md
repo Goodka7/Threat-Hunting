@@ -131,7 +131,7 @@ Attackers establish staging locations to organise tools and stolen data. Identif
 Search for newly created directories in system folders that were subsequently hidden from normal view.
 Look for mkdir or New-Item commands followed by attrib commands that modify folder attributes.
 
-**Identify the user account that was compromised for initial access?**
+**Identify the PRIMARY staging directory where malware was stored?**
 `C:\ProgramData\WindowsCache`
 
 **KQL Query:**
@@ -220,7 +220,7 @@ Scheduled tasks provide reliable persistence across system reboots. The task nam
 Search for scheduled task creation commands executed during the attack timeline.
 Look for schtasks.exe with the /create parameter in DeviceProcessEvents.
 
-**Identify the user account that was compromised for initial access?**
+**Identify the name of the scheduled task created for persistence?**
 `Windows Update Check`
 
 **KQL Query:**
@@ -263,7 +263,7 @@ Command and control infrastructure allows attackers to remotely control compromi
 Analyse network connections initiated by the suspicious executable shortly after it was downloaded.
 Use DeviceNetworkEvents to find outbound connections from the malicious process to external IP addresses.
 
-** Identify the IP address of the command and control server?**
+**Identify the IP address of the command and control server?**
 `78.141.196.6`
 
 **KQL Query:**
@@ -437,7 +437,7 @@ DeviceProcessEvents
 
 <img width="1112" height="415" alt="image" src="https://github.com/user-attachments/assets/182ff0aa-b639-44e5-bfb5-7476ff2f9924" />
 
-## Stage 9 - Execution
+## Stage 10 - Execution
 
 ### 🚩 Flag 18: Malicious Script
 
@@ -461,7 +461,7 @@ DeviceFileEvents
 
 <img width="889" height="615" alt="image" src="https://github.com/user-attachments/assets/e7571b0c-14d1-4cd8-9364-86bd5b799c7e" />
 
-## Stage 10 - Lateral Movement
+## Stage 11 - Lateral Movement
 
 ### 🚩 Flag 19: Secondary Target
 
@@ -472,7 +472,7 @@ Examine the target system specified in remote access commands during lateral mov
 Look for IP addresses used with cmdkey or mstsc commands near the end of the attack timeline.
 
 **What IP address was targeted for lateral movement?**
-`10.1.0.188 1`
+`10.1.0.188`
 
 **KQL Query:**
 ```KQL
@@ -506,3 +506,79 @@ DeviceProcessEvents
 ```
 
 <img width="650" height="389" alt="image" src="https://github.com/user-attachments/assets/1a1e05d9-72cd-46fc-b123-2f5b6fa7a7c1" />
+
+## Lessons Learned
+
+Initial access via valid credentials remains a high-risk entry vector.  
+The attacker used legitimate RDP authentication from an external IP (`88.97.178.12`) with the compromised user account `kenji.sato` on `AZUKI-SL`. Because no exploit was required, this activity blended with normal remote administration and bypassed traditional perimeter-focused defenses.
+
+Early discovery activity was lightweight but effective.  
+Simple commands such as `arp -a` gave the attacker immediate visibility into nearby hosts and network layout. These low-noise actions are easy to overlook yet provide valuable context for lateral movement planning.
+
+Windows Defender exclusions created a blind zone for malicious tooling.  
+By adding three file extension exclusions and excluding the Temp path `C:\Users\KENJI~1.SAT\AppData\Local\Temp`, the attacker ensured that files written to these locations might not be scanned. This shows how misused exclusions can effectively neutralize endpoint protection.
+
+Living-off-the-land binaries enabled stealthy tool delivery.  
+The attacker abused `certutil.exe` to download files into `C:\ProgramData\WindowsCache`. Using native Windows utilities instead of custom droppers reduced their detection footprint and made network traffic resemble legitimate administrative activity.
+
+Persistence was layered and disguised as routine maintenance.  
+A scheduled task named `Windows Update Check` was created to run `C:\ProgramData\WindowsCache\svchost.exe`. The task name mimics legitimate Windows behavior while pointing to a non-standard binary in a hidden staging directory.
+
+Credential theft expanded the attacker’s options beyond the initial account.  
+The credential dumping tool `mm.exe` was used with the module `sekurlsa::logonpasswords` to extract credentials from LSASS. Once successful, this technique provides the attacker with additional accounts and potential paths to escalate privileges or move laterally.
+
+Data was staged and exfiltrated using familiar cloud infrastructure.  
+Sensitive data was bundled into `export-data.zip` and exfiltrated via `Discord` over HTTPS. This approach allowed the attacker to leverage common web traffic patterns and trusted domains to move data out of the environment.
+
+Anti-forensics actions reduced available evidence.  
+Clearing the `Security` event log with `wevtutil` removed critical process creation and logon telemetry. This step complicates post-incident reconstruction and should be treated as a strong signal of malicious activity.
+
+A backdoor account ensured potential long-term access.  
+Creation of the local account `support` provided an additional foothold the attacker could return to, even if the original credentials for `kenji.sato` were reset. Undetected persistence at the account level is a significant long-term risk.
+
+---
+
+## Recommendations for Remediation
+
+### Containment
+
+- Isolate `AZUKI-SL` from the network to prevent further attacker activity or lateral movement.
+- Block outbound traffic to the C2 IP `78.141.196.6` at network and endpoint layers.
+- Review recent RDP and authentication activity for `kenji.sato` and the local account `support` across all systems.
+
+### Eradication
+
+- Remove the scheduled task `Windows Update Check` and verify no other suspicious tasks exist.
+- Delete the local backdoor account `support` and confirm there are no unexpected administrator-level accounts.
+- Revert Windows Defender exclusions by removing malicious entries under:
+  - `Windows Defender\Exclusions\Extensions` (all three added extensions)
+  - `Windows Defender\Exclusions\Paths` including `C:\Users\KENJI~1.SAT\AppData\Local\Temp`
+- Delete the staging directory `C:\ProgramData\WindowsCache` and all contents, including `svchost.exe` and `mm.exe`.
+- Remove related artifacts such as `wupdate.ps1` and `export-data.zip` wherever found.
+
+### Recovery
+
+- Reset the password for `kenji.sato` and enforce multi-factor authentication (MFA) on that account and other privileged users.
+- Review and reset credentials for any accounts believed to be exposed via `mm.exe` and `sekurlsa::logonpasswords`.
+- Consider rebuilding `AZUKI-SL` from a known-good image if there is any doubt about full remediation.
+
+### Detection and Monitoring
+
+- Ensure process command-line logging (for example, Security Event ID `4688` with command line) is enabled and forwarded to the SIEM.
+- Implement alerts for:
+  - RDP logons (Remote Desktop) from external or unusual IP ranges.
+  - Changes to Windows Defender exclusions under `Exclusions\Extensions` and `Exclusions\Paths`.
+  - Execution of download-capable LOLBins such as `certutil.exe`, `bitsadmin.exe`, `powershell.exe` with `Invoke-WebRequest` or `curl`, and similar tools.
+  - Creation of scheduled tasks via `schtasks` with suspicious names or non-standard paths.
+  - Processes accessing LSASS memory not on an approved allowlist.
+  - Creation of `.zip` archives like `export-data.zip` in system or staging directories.
+  - Use of `wevtutil` to clear logs, especially the `Security` log.
+- Add detections for outbound traffic to known `Discord` endpoints where such usage is not part of normal business operations.
+
+### Hardening
+
+- Restrict or eliminate direct RDP exposure to the internet; require VPN, conditional access, and MFA for remote administration of systems like `AZUKI-SL`.
+- Apply least privilege, ensuring that accounts like `kenji.sato` have only the access needed for their role and are not over-privileged on critical systems.
+- Limit local administrator access and separate admin accounts from daily user accounts.
+- Implement stricter controls around Defender exclusions so that only centrally approved changes are allowed and all modifications are logged and reviewed.
+- Deploy application control (for example, AppLocker or WDAC) to restrict execution of tools such as `mm.exe` from user-writeable or non-standard di
