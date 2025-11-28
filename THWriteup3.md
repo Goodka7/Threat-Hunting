@@ -4,7 +4,7 @@ Analyst: `James Harrington`
 
 Date Completed: `2025-11-08`
 
-Environment Investigated: `gab-intern-vm`
+Environment Investigated: `AZUKI-SL`
 
 Timeframe: `Nov 08 – 15, 2025`
 
