@@ -581,4 +581,4 @@ Creation of the local account `support` provided an additional foothold the atta
 - Apply least privilege, ensuring that accounts like `kenji.sato` have only the access needed for their role and are not over-privileged on critical systems.
 - Limit local administrator access and separate admin accounts from daily user accounts.
 - Implement stricter controls around Defender exclusions so that only centrally approved changes are allowed and all modifications are logged and reviewed.
-- Deploy application control (for example, AppLocker or WDAC) to restrict execution of tools such as `mm.exe` from user-writeable or non-standard di
+- Deploy application control (for example, AppLocker or WDAC) to restrict execution of tools such as `mm.exe` from user-writeable or non-standard directories.
