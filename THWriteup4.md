@@ -67,10 +67,11 @@ Overall, this activity demonstrates a full intrusion lifecycle: initial access v
 
 Remote Desktop Protocol connections leave network traces that identify the source of unauthorised access. Determining the origin helps with threat actor attribution and blocking ongoing attacks.
 
-What to Hunt:  
+**What to Hunt:**  
 Query logon events for interactive sessions from external sources during the incident timeframe.
+Use DeviceLogonEvents table and filter by ActionType or LogonType values indicating remote access.
 
-Flag value:  
+**Identify the source IP address of the Remote Desktop Protocol connection?:**  
 `88.97.178.12`
 
 KQL Query:
@@ -79,3 +80,21 @@ DeviceLogonEvents
 | where DeviceName == "azuki-sl"
 | project TimeGenerated, AccountName, RemoteIP, LogonType, ActionType
 ```
+Note: Used "Custom time range" for ALL KQL queries: 2025-11-19 to 2025-11-20, then narrowed down once we found relevant events.
+
+<img width="1036" height="462" alt="image" src="https://github.com/user-attachments/assets/b6bc6c88-cde4-4f87-9544-8c3b79385298" />
+
+**MITRE Technique:**  
+`🔸 T1021.001 – Remote Services: Remote Desktop Protocol`
+
+##Stage 2 - Initial Access (Compromised Account)
+
+###🚩 Flag 2: INITIAL ACCESS - Compromised User Account
+
+Identifying which credentials were compromised determines the scope of unauthorised access and guides remediation efforts including password resets and privilege reviews.
+
+What to Hunt:
+Focus on the account that authenticated during the suspicious remote access session.
+
+Flag value:
+kenji.sato
