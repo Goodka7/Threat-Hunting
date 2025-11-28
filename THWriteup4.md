@@ -1,4 +1,4 @@
-<img width="498" height="279" alt="image" src="https://github.com/user-attachments/assets/ec00db1e-fdcc-4d89-b667-de4e0396f176" /># Threat Hunt Report: **Full Threat Hunt**
+# Threat Hunt Report: **Full Threat Hunt**
 
 Analyst: `James Harrington`
 
